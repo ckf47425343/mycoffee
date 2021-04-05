@@ -1,0 +1,177 @@
+.detail{
+  font-size: 14px;
+  
+  .show_Img{
+   
+   width: 100%;
+  .title{
+    position: relative;
+    width: 200px;
+    top:-160px;
+    left: calc(~"50% - 100px");
+    color: white;
+    text-align: center;
+    
+  }
+  .move{
+    transform: rotateX(90deg);
+    animation: move 5s linear infinite;
+  }
+  
+  }
+  @keyframes move {
+    0%{
+        transform: rotateX(90deg);
+    }
+    50%{
+        transform: rotateX(0deg);
+    }
+    100%{
+        transform: rotateX( 90deg);
+    }
+}
+  .price{
+    font-size: 16px;
+    
+    color:#0C34BA;
+    display:flex;
+    margin-bottom: 15px;
+    .title{
+    
+      font-weight: bold;
+      margin-right:10px;
+    }
+  }
+  .detail_Info{
+    padding: 0px 10px;
+    position: relative;
+    top: -35px;
+    
+  }
+  .content{
+    padding: 10px;
+    position: relative;
+    top: -25px;
+    left:0px;
+    padding-bottom: 50px;
+    background-color: white;
+   border-radius: 10px;
+  }
+  .rule_item{
+    display:flex;
+    margin-bottom: 10px;
+    &:last-child{
+      margin-bottom: 0px;
+    }
+    .title{
+     
+      width:50px;
+      height: 25px;
+      line-height: 25px;
+      margin-right: 20px;
+    }
+    .rule{
+       width: 60px;
+       height: 25px;
+       background-color:#e8e8e8;
+       text-align: center;
+       line-height:25px;
+       border-radius: 30px;
+       margin-right: 10px;
+      //  color: white;
+      color: black;
+      
+    }
+    .active{
+      background-color: #0C34BA;
+      color: white;
+    }
+  }
+  .count{
+    margin-top: 20px;
+    padding: 20px 0px;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+    .van-stepper{
+      float: right;
+    }
+    .title{
+      float: left;
+    }
+   /deep/ .van-stepper__minus{
+      border-color:#0C34BA;
+      color: #0C34BA;
+    }
+  /deep/.van-stepper__plus{
+     background-color: #0C34BA ;
+  }
+  }
+ .desc{
+    padding: 10px 0px;
+    .desc_content{
+      font-size: 12px;
+      color: #b9b8b8;
+      margin-bottom: 10px;
+      &:last-child{
+        margin-bottom: 0px;
+      }
+    }
+    .title{
+      margin-bottom:10px;
+    }
+  }
+  .van-goods-action-button--first {
+    background-color:#6184fa ;
+    color: white;
+  }
+  .van-goods-action-button--last{
+    background-color: #0C34BA;
+    color: white;
+  }
+  .van-info{
+     background-color: #0C34BA;
+  }
+  .bottom_box{
+    height:40px;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    z-index: 99999;
+    .movebag{
+      width: 10px;
+      height: 10px;
+      position: relative;
+      left: 150px;
+      top: 0px;
+      animation: star 1s linear;
+      opacity: 0;
+      
+     
+    }
+    img{
+      display:block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  @keyframes star {
+    0%{
+        top: 0px;
+        left: 150px;
+        opacity:1;
+    }
+    50%{
+        top: -50px;
+        left: 100px;
+        display: none;
+        
+    }
+    100%{
+        top: 0px;
+        left: 20px;
+        display: none;
+        opacity:0;
+    }
+}
+}
