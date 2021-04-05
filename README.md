@@ -1,24 +1,90 @@
-# mycoffee
 
-## Project setup
-```
-npm install
-```
+项目环境搭建
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+  凡是修改配置文件的，都需要重启服务器
 
-### Compiles and minifies for production
-```
-npm run build
-```
+  vant框架配置
+    01
+      Vue 2 项目，安装 Vant 2.x 版本：
+      cnpm i vant -S
 
-### Customize configuration ...配置
-See [Configuration Reference](https://cli.vuejs.org/config/).
+    02
+      自动按需引入组件 (推荐)
+      babel-plugin-import 是一款 babel 插件，它会在编译过程中将 import 的写法自动转换为按需引入的方式。
+      cnpm i babel-plugin-import -D
 
---mian
+      然后在项目根目录下写入以下代码
+        module.exports = {
+          presets: [
+            '@vue/cli-plugin-babel/preset'
+          ],
+          plugins: [
+            ['import', {
+              libraryName: 'vant',
+              libraryDirectory: 'es',
+              style: true
+            }, 'vant']
+          ]
+        }
+
+
+   03
+      在main.js导入vant的组件
+      import { Button } from 'vant'
+
+   04 
+      在main.js注册vant的组件
+      Vue.use(Button)
+
+  
+  rem适配
+    01
+      postcss-pxtorem 是一款 postcss 插件，用于将单位转化为 rem
+      cnpm i postcss-pxtorem -D
+
+    02
+      lib-flexible 用于设置 rem 基准值
+      cnpm i lib-flexible -D
+
+    03
+      在根目录创建postcss.config.js文件，然后写入以下代码
+        module.exports = {
+          plugins: {
+            autoprefixer: {
+              browsers: ['Android >= 4.0', 'iOS >= 8'],
+            },
+            'postcss-pxtorem': {
+              rootValue: 37.5,
+              propList: ['*'],
+            },
+          },
+        };
+
+  04
+    在main.js导入lib-flexible.js
+    import 'lib-flexible/flexible'
+
+  布局时需要在iphone6标准屏幕布局
+  如果写px单位，px会自动转换为rem
+  也就可以直接写rem单位
+
+
+  01-安装vue ajax方案
+    cnpm i axios vue-axios --save
+
+  02-在main.js引入
+    import axios from 'axios'
+    import VueAxios from 'vue-axios'
+
+    Vue.use(VueAxios, axios)
+
+
+  axios拦截器
+    在发起请求之前，先执行拦截器
+
+
+
+--mian路由
   
 
 1.登录login
