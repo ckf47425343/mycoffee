@@ -81,7 +81,62 @@
 
   axios拦截器
     在发起请求之前，先执行拦截器
+ 全局配置请求时携带cookie
+axios.defaults.withCredentials = true
 
+配置请求头
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
+
+```
+
+```txt
+vue-cookies
+
+参考链接 https://www.jianshu.com/p/60c13168cc8f
+
+安装
+npm i vue-cookies --save
+
+使用
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
+
+设置cookie
+过期时间以秒为单位
+this.$cookies.set(键名, 值, 过期时间)
+
+```
+vscode 当前项目全局匹配 ctrl+shift+f
+
+比如删除所有
+
+全局匹配console.log()语句
+
+使用正则匹配
+console.log\(.*\);?
+
+
+vue-cli4 打包
+
+1、删除路由的hisotry模式
+2、保证vue项目没有任何vue抛出的警告或者错误
+3、去除所有console.log()语句
+4、在根目录下创建vue.config.js, 写入 module.exports = {publicPath: './'}
+```
+
+```txt
+安装sublime text3
+ctrl+shift+p，输入 install package control, 然后回车
+
+通过package control安装插件
+ctrl+shift+p, 输入install, 选择 package control: install packge
+
+等待加载插件仓库后，输入安装的插件名称
+
+```
+
+# 0C34BA 主题色
+# 646566 灰色
 
 
  --mian路由
