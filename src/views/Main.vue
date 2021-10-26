@@ -49,14 +49,6 @@
             activeImg: require('../assets/images/home_active.png')
           },
           {
-            title: '菜单',
-            icon: 'search',
-            name: 'Menu',
-            path: '/main/menu',
-            inactiveImg: require('../assets/images/menu.png'),
-            activeImg: require('../assets/images/menu_active.png')
-          },
-          {
             title: '购物袋',
             icon: 'friends-o',
             name: 'Shopbag',

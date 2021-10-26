@@ -6,8 +6,8 @@
       left-arrow
       @click-left="onClickBack"
     />
-    <div class="show_Img">
-      <img :src="productDetail.large_img" class="auto-img" alt="" />
+    <div class="show_Img" >
+      <img :src="productDetail.large_img" class="auto-img" @click=" imagePreview" alt="" />
       <div class="title move">
         <div class="cn_name">{{ productDetail.name }}</div>
         <div class="en_name">{{ productDetail.enname }}</div>
@@ -69,14 +69,14 @@
       <van-goods-action-icon
         icon="bag"
         text="购物袋"
-        :color="shopBagCount > 0 ? '#0C34BA' : '#646566'"
+        :color="shopBagCount > 0 ? '#5f4121' : '#646566'"
         :badge="shopBagCount"
         @click="goShopBag"
       />
       <van-goods-action-icon
         icon="like"
         text="收藏"
-        :color="isLike ? '#0C34BA' : '#646566'"
+        :color="isLike ? '#5f4121' : '#646566'"
         @click="likeProduct()"
       />
       <van-goods-action-button text="加入购物车" @click="addShopBag(false)" />
@@ -87,6 +87,7 @@
 
 <script>
 import "../assets/less/detail.less";
+import { ImagePreview } from 'vant';
 export default {
   created() {
     this.getProductDetail();
@@ -99,6 +100,8 @@ export default {
       value: 1,
       //商品详情数据
       productDetail: {},
+
+      imageView:[],
       //购物袋的数量
       shopBagCount: 0,
       //是否收藏
@@ -111,6 +114,13 @@ export default {
     };
   },
   methods: {
+    imagePreview(){
+           console.log(this.imageView)
+            ImagePreview({
+             images:this.imageView,
+             startPosition: 0,
+});
+    },
     getProductDetail() {
       let appkey = this.appkey;
       let pid = this.$route.params.pid;
@@ -128,6 +138,7 @@ export default {
           if (result.data.code == 600) {
             this.$toast(result.data.msg);
             let data = result.data.result[0];
+            this.imageView.push(data.large_img)
             console.log(data);
             let productDetail = {};
 

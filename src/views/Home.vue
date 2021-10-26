@@ -1,194 +1,288 @@
 <template>
+
+
   <div class="home">
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-        <div class="home-content">
-    
-      
-      
-      <!-- 商品 -->
-     
-        
-       
-         
-          <div class="header">
-           <div class="banner-box">
-           <div> 
-        <van-swipe @change="changeCurrentIndex" :autoplay="5000" loop>
+     <div class="header">
+         <div class="search-box"> 
+           <form action="/">
+                <van-search
+                
+                  placeholder="请输入搜索关键词"
+                  background="rgba(0, 0, 0, 0.3)"
+                  @search="onSearch"
+                  @cancel="onCancel"
+                   shape="round"
+                  @click-input='goSearch'
+                  
+                />
+    </form>
+         </div>
+         <div class="banner">
+        <van-swipe  :autoplay="5000" loop>
           <van-swipe-item v-for="(item, index) in bannerData" :key="index">
             <img
               class="auto-img"
               :src="item.bannerImg"
               alt=""
-              @click="goDetail(item.pid)"
+              :data-pid='item.pid'
+              @click="goDetail"
             />
          
           </van-swipe-item>
-          
-          <template #indicator>
-            <div class="index-box">
-              <div
-                :class="{ active: index == currentIndex }"
-                v-for="(item, index) in bannerData"
-                :key="index"
-              ></div>
-            </div>
-          </template>
         </van-swipe>
-         </div>
-         </div> 
-          </div>
-          
-        <van-list
-        v-model="loading"
-         fixed
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="loadData"
-        
-        offset="30"
-      >
-        <div class="product-box">
-          <div>
-            <div class="clearfix pro-title-box">
-              <span class="pro-title">热卖推荐</span>
+       </div>
+     </div>
+     <div class="main-area">
+       <div class="aside"  @scroll="asideScroll">
+         <ul class="menu" @click="ToggleMenu">
+           <li class="menu-item"  :class="currentMenuIndex===index?'active':''"  :data-index="index"  v-for="(item,index) in productType"  :key="index">
+             {{item.typeDesc}}
+             </li>
+         </ul>
+         
+       </div>
+      <div class="content" ref="content"    @scroll="handleScroll"  @click="goDetail">
+           <ul class="list" v-for="(item,index) in productDatas" ref="refUls"  :key="index">
+           <li class="list-item"       v-for="(t,i) in item.result"  :key="i"  ref="refLis">
+             <div class="click-box"  :data-pid="t.pid"></div>
+            <div class="left-box">
+                <img src=""   :data-src='t.smallImg'  :data-pid='t.pid' alt="">
             </div>
-            
-            <div class="products clearfix">
-              <div
-                class="pro-item fl"
-                v-for="(item, index) in currentLoadProduct"
-                :key="index"
-                @click="goDetail(item.pid)"
-              >
-                <div class="img-box">
-                  <img class="auto-img" :src="item.smallImg" />
-                  <!-- hot标签 -->
-                  <div class="hot">hot</div>
-                </div>
-                <div class="pro-info">
-                  <div class="pro-name one-text">{{ item.name }}</div>
-                  <div class="pro-enname one-text">{{ item.enname }}</div>
-                  <div class="pro-price">￥{{ item.price }}</div>
-                </div>
+            <div class="right-box">
+              <div class="name one-text">
+               <span >{{t.name}}</span>
+                <span >({{t.enname}})</span>
+              </div>
+              
+              <div class="desc two-text">
+                {{t.desc}}
+              </div>
+              <div class="price-box">
+                    <span  class="price title-color fw-blod">￥{{t.price}}</span>
               </div>
             </div>
-          </div>
-        </div>
-       </van-list>
-          
-       
-     
-        </div>
-    </van-pull-refresh>
-    <van-nav-bar>
-      <template #left>
-        <div class="home-login " @click="goLogin()">
-          <div class="t1">下午好,</div>
-          <div class="t2 one-text">{{NickName}}</div>
-        </div>
-      </template>
-      <template #right>
-        <div class="home-search" >
-          <van-search placeholder="输入商品名称" @click="goSearch()" />
-        </div>
-      </template>
-              </van-nav-bar>
-  <!-- <PullBox>
-     <template #s1 > -->
-     
-     <!-- </template>
-      </PullBox> -->
+         </li>
+         </ul>
+     </div>
+        
   
+    
+  
+  
+  </div>
   </div>
 </template>
 
 <script>
 import "../assets/less/home.less";
-import  PullBox  from "../components/PullBox.vue"
+import {getProductType,getTypeProduct} from '../api/api.js'
+
+
 export default {
   name: "Home",
-   components:{
-     PullBox
-    },
   data() {
     return {
-      //是否刷新
-      isLoading: false,
-      //呢称
-      NickName:'请先登录',
-      //当前轮播图片索引
-      currentIndex: 0,
-
-      //轮播数据
-      bannerData: [],
-
-      //热卖商品数据
-      hotProduct: [],
-      //每次加载商品数量
-      currentCount: 4,
-      //开始加载商品的索引
-      startLoadIndex: 0,
-      //当前加载的商品
-      currentLoadProduct: [],
-      //所有商品
-      allProduct: [],
-      loading: true,
-      finished: false,
-      isLoad:true
+      //获取商品类型
+      productType:[],
+      //商品数据
+      productDatas:[],
+      //侧边栏的索引值
+      currentMenuIndex:0,
+     //轮播图
+      bannerData:[],
     };
   },
 
   created() {
-    //获取呢称
-    this.getMyName()
+
     //获取轮播图数据
     this.getBannerData();
-
-    //获取热卖推荐商品
-    this.getHotProduct();
-    
+  //获取商品类型
+    this.getProductType()
   },
-
+  
   methods: {
-    //刷新
-     onRefresh() {
-      setTimeout(() => {
-        this.$toast('刷新成功');
-        this.isLoading = false;
-        this.$router.go(0)
-        console.log(this.isLoading)
-      },500);
-    },
+ //获取商品列表
+  getProductType(){
+  
+    getProductType({appkey:this.appkey}).then(result=>{
+       this.productType=result.result
+       //获取商品类型
+         this.getTypeProducts()
+    })
+  },
+  //更新完后获取dom信息
+  init(){
+        this.$nextTick(()=>{
+
+          this.box=this.$refs.content
+          
+          let li=this.box.getElementsByTagName('li')[0]
+
+          this.imgs=this.box.getElementsByTagName('img')
+
+         this.boxHeight=this.box.offsetHeight
+
+         this.HeightVal=li.offsetHeight
+
+         this.MarginVal=Math.ceil(getComputedStyle(li,null).getPropertyValue("margin-top").slice(0,-2))
+          
+          
+          this.getListItem()
+       
+         this.currentMenuIndex=0
+
+          this.handleScroll({target:this.box})
+        })
+  },
+ //获取列表的offsetHeight,offsetTop信息
+  getListItem(){
+    
+//计算每个ul的offsetTop,以及offsetHeight
+
+this.ulCache={}
+this.liCache={}
+
+  
+
+
+let    height=parseInt(this.HeightVal),spacing=parseInt(this.MarginVal)
+
+let   offsetHeight=0,offsetTop=0,len=0;
+
+
+ this.productDatas.forEach((item,index)=>{
+  len=item.result.length
+  offsetTop+=offsetHeight
+  offsetHeight=len*(height+spacing)
+  this.ulCache[index]={
+    offsetHeight,
+    offsetTop
+  }
+  
+  
+ })
+ //重置数据
+offsetTop=0,offsetHeight=0
+ //计算每个li元素的offsetHeight,offsetTop
+ this.productDatas.forEach((item,index)=>{
+     item.result.forEach((item,index)=>{
+            offsetTop+=(offsetHeight+spacing)
+            offsetHeight=height
+            delete this.liCache[item.pid]
+            this.liCache[item.pid]={offsetHeight,offsetTop}
+     })
+ })
+
+ //获取缓存img元素
+   Array.from(this.imgs).forEach((item,index)=>{
+     console.log(item.dataset)
+     let pid=item.dataset.pid
+     let src=item.dataset.src
+         if(pid){
+           this.liCache[pid].node=item
+           this.liCache[pid].imgSrc=src
+         }
+   })
+
+   console.log('liCache==>',this.liCache)
+  
+ 
+
+  
+  },
+  //根据类型获取商品
+  getTypeProducts(){
+    let key='type',appkey=this.appkey,value
+    let arr=this.productType.map((item,index)=>{
+        value=item.type
+       return getTypeProduct({key,value,appkey})
+    })
+     Promise.all(arr).then(result=>{
+       this.productDatas=result
+
+       let offsetTop=0,offsetHeight=0
+
+        
+       
+      this.init()
+       
+
+     })
+  },
+  //跳转到详情页
+asideScroll(e){
+  e.stopPropagation();
+  
+},
+  //切换菜单
+ToggleMenu(e){
+   let index=parseInt(e.target.dataset.index)
+   this.currentMenuIndex=index
+   this.box.scrollTop=this.ulCache[index].offsetTop
+},
+  //触发滚动
+handleScroll(e){
+let scrollTop=e.target.scrollTop+50
+let currentKey=0,topVal,bottomVal
+let obj=this.ulCache
+ //目前的所在的选项
+for(let key in obj){
+     topVal=obj[key].offsetTop
+     bottomVal=obj[key].offsetTop+obj[key].offsetHeight
+    
+    if(scrollTop>=topVal&&scrollTop<=bottomVal){
+     
+       
+         this.currentMenuIndex=parseInt(key)
+    }
+}
+//加载显示区图片
+let liObj=this.liCache
+
+for(let key in liObj){
+  
+      if(liObj[key].offsetTop>=scrollTop-100&&liObj[key].offsetTop<scrollTop+this.boxHeight){
+         
+           console.log(liObj[key].node,liObj[key].imgSrc)
+
+           liObj[key].node.src=liObj[key].imgSrc
+
+           delete liObj[key]
+            
+      }
+}
+
+
+
+ 
+
+
+  
+
+
+
+},
+ //跳转到详情页
+  goDetail(e){
+  let pid=e.target.dataset.pid
+  if(pid){
+     this.$router.push({path:'/detail/'+pid})
+  }
+  },
     //请先登录
     goLogin(){
       
       this.$router.push({name:'Login'})
     },
-    //修改轮播图片索引
-    changeCurrentIndex(index) {
-      this.currentIndex = index;
+    onSearch(){
+
     },
-    //获取名字
-    getMyName(){
-     let tokenString=localStorage.getItem("__tk")
-     let appkey=this.appkey
-     this.getAxios({
-       method:'GET',
-       url:'/findMy',
-       params:{
-        tokenString,
-        appkey
-       }       
-     },result=>{
-      if(result.data.code=='A001'){
-        this.NickName=result.data.result[0].nickName
-      }
-     })
-    
+    onCancel(){
+
     },
     goSearch(){
      this.$router.push({name:'Search'})
-
     },
     //获取轮播图数据
     getBannerData() {
@@ -295,9 +389,32 @@ export default {
       },500);
     },
     //查看商品详情页面
-    goDetail(pid) {
-      this.$router.push({ name: "Detail", params: { pid } });
-    },
+    // goDetail(pid) {
+    //   this.$router.push({ name: "Detail", params: { pid } });
+    // },
   },
+  
+watch:{
+  liCache:{
+    handler(oldVal,newVal){
+      console.log('watch==>',oldVal)
+    }
+  }
+},
+
+  mounted() {
+    //获取li元素的位置信息
+
+ 
+   //获取li元素的图片元素
+  
+    // setTimeout(()=>{
+    //    document.documentElement.scrollTop='1000'as
+    // },1000)
+   
+  },
+  updated(){
+    console.log('update==>',)
+  }
 };
 </script>

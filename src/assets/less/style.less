@@ -1,0 +1,80 @@
+// 首页头部高度
+@headerHeight: 230px;
+//底部导航的高度
+@navHeight: 50px;
+//侧边高度
+@asideHeight: calc(100vh - @headerHeight - @navHeight);
+//侧边宽度
+@asideWidth: 100px;
+//列表盒子高度
+@listHeight: calc(100vh - @headerHeight);
+
+@pageColor: #5f4121;
+
+body {
+  background-color: #fff;
+}
+
+.auto-img {
+  width: 100%;
+  display: block;
+}
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+
+.one-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.two-text {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+}
+.title-color {
+  color: @pageColor;
+}
+.fw-blod {
+  font-weight: 700;
+}
+
+//搜索图标
+.van-icon-search::before {
+  color: #000;
+}
+//导航图标
+.van-icon-arrow-left::before {
+  color: @pageColor !important;
+}
+//搜索图标
+.search[data-v-1a1d373c] .van-nav-bar .van-icon {
+  color: @pageColor !important;
+}
+//导航提示文本
+.van-nav-bar__text {
+  color: @pageColor !important;
+}
+//导航主题
+.van-nav-bar__title {
+  color: @pageColor !important;
+}
+//搜素清空图标
+.van-icon-clear {
+  color: @pageColor !important;
+}

@@ -38,9 +38,8 @@ import {
   Tab,
   Tabs,
   Cell,
-  Uploader,
-  PullRefresh
-} from 'vant'
+  Uploader
+  } from 'vant'
 
 //注册Button组件
 Vue
@@ -71,8 +70,7 @@ Vue
   .use(Tabs)
   .use(Cell)
   .use(Uploader)
-  .use(PullRefresh)
-  
+
 
 
 //设置Vue原型属性

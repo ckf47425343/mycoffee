@@ -68,6 +68,7 @@
 </template>
 
 <script>
+
 import "../assets/less/secure.less";
 import BgBox from "../components/BgBox.vue";
 

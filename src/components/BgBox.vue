@@ -8,17 +8,19 @@
 </template>
 
 <script>
+// import '@/assets/less/style.less'
   export default {
     name: 'BgBox'
   }
 </script>
 
 <style lang="less" scoped>
+
   .bg-box{
 
     .bg{
       height: 100px;
-      background-color: #0C34BA;
+      background-color: #5f4121;
     }
 
     .bg-content{
