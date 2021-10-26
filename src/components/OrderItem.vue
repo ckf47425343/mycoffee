@@ -96,12 +96,13 @@
            line-height: 16px;
          }
          .contentPrice{
-           color:#0C34BA;
+           color:#5f4121;
            font-size: 16px;
            font-weight:bold;
          }
          .contentCount{
-          
+          font-size: 20px;
+          color:#5f4121 ;
           margin-right: 30px;
          }
           

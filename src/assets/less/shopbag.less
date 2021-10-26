@@ -1,4 +1,5 @@
 @import './style.less';
+
 .shopbag {
   padding-top: 46px;
 
@@ -13,6 +14,8 @@
   .bottom-button {
     width: 100px;
     height: 30px;
+    background-color: @pageColor !important;
+    color: #fff;
   }
 
   .shopbag-bg {
@@ -138,11 +141,25 @@
       border-color: @pageColor;
     }
 
+    // 购物袋提交订单
+    .van-submit-bar {
+      bottom: calc(@navHeight);
+      // background: none !important;
+    }
     .van-submit-bar__bar {
       .van-button {
         margin-left: auto;
       }
     }
+  }
+  //全选按钮
+  .van-checkbox__icon--checked .van-icon {
+    background-color: @pageColor;
+    border-color: @pageColor;
+  }
+  //总价钱
+  .van-submit-bar__price {
+    color: #000;
   }
 
   .names {

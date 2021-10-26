@@ -25,7 +25,7 @@
     </BgBox>
 
     <div class="logout-box">
-      <van-button color="#0C34BA" block round @click="logout"
+      <van-button block round @click="logout"
         >退出登录</van-button
       >
     </div>
@@ -57,7 +57,7 @@
           />
 
           <div class="commit-btn">
-            <van-button round block color="#0C34BA" @click="commit"
+            <van-button round block color="#5f4121" @click="commit"
               >提交</van-button
             >
           </div>
@@ -69,7 +69,7 @@
 
 <script>
 
-import "../assets/less/secure.less";
+import '@/assets/less/secure.less';
 import BgBox from "../components/BgBox.vue";
 
 //导入表单验证模块

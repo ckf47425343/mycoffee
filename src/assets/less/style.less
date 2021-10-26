@@ -12,7 +12,7 @@
 @pageColor: #5f4121;
 
 body {
-  background-color: #fff;
+  background-color: #f7f7f7;
 }
 
 .auto-img {
@@ -77,4 +77,21 @@ body {
 //搜素清空图标
 .van-icon-clear {
   color: @pageColor !important;
+}
+//迭加器
+.van-stepper--round .van-stepper__minus {
+  background-color: @pageColor;
+  border: none;
+}
+.van-stepper--round .van-stepper__plus {
+  background-color: @pageColor;
+}
+.van-stepper__minus::before {
+  background-color: #fff;
+}
+.van-stepper__plus::before {
+  background-color: #fff;
+}
+button {
+  background: #5f4121;
 }

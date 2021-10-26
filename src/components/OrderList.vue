@@ -124,7 +124,7 @@
        .allmoney{
        
          font-weight:bold;
-         color: #0C34BA; 
+         color: #5f4121; 
 
          span{
              font-size:16px;

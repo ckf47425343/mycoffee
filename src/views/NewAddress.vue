@@ -23,6 +23,7 @@
 
 <script>
 import areaList from "../assets/js/area";
+import '@/assets/less/addAddress.less';
 
 export default {
   name: "NewAddress",
@@ -35,12 +36,23 @@ export default {
       aid: "",
       //添加的地址信息
       addAdressInfo: {},
+      //上一个页面
+      fromPath:''
     };
   },
+      beforeRouteEnter (to, from, next) {
+        
+        next((vm)=>{
+          console.log(from)
+          vm.fromPath=from.fullPath
+          console.log(vm.fromPath)
+        })
+    },
 
   created() {
     //获取aid
     this.aid = this.$route.query.aid;
+    
 
     if (this.aid) {
       console.log("this.aid==>", this.aid);
@@ -91,7 +103,7 @@ export default {
         if (result.data.code == 700) {
           this.$router.push({ name: "Login" });
         } else if (result.data.code == 9000 || result.data.code == 30000) {
-          this.$router.push({ name:"Address"});
+          this.$router.replace(this.fromPath);
         }
 
         this.$toast(result.data.msg);
@@ -169,25 +181,3 @@ export default {
   },
 };
 </script>
-
-<style lang="less" scoped>
-.new-address {
-  padding-top: 46px;
-  /deep/ .van-nav-bar .van-icon {
-    color: #0c34ba;
-  }
-
-  /deep/ .van-nav-bar__text {
-    color: #0c34ba;
-  }
-
-  /deep/ .van-button--danger {
-    background-color: #0c34ba;
-    border-color: #0c34ba;
-  }
-
-  /deep/ .van-switch--on {
-    background-color: #0c34ba;
-  }
-}
-</style>

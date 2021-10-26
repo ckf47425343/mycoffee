@@ -24,8 +24,9 @@
 </template>
 
 <script>
+import '@/assets/less/search.less';
 import BgBox from "../components/BgBox.vue";
-import {debounce}    from   '@/utils/index.js'
+import {debounce}    from   '@/utils/index.js';
 import ProductItem from "../components/ProductItem.vue";
 export default {
   name: "Search",
@@ -127,42 +128,3 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.search {
-  padding-top: 46px;
-
-  /deep/ .van-nav-bar .van-icon {
-    color: #0C34BA;
-  }
-
-  /deep/ .van-nav-bar__text {
-    color: #0C34BA;
-  }
-
-  /deep/ .van-nav-bar__right {
-    width: calc(~"100% - 110px");
-  }
-
-  /deep/ .home-search {
-    width: 100%;
-  }
-  /deep/ .home-search .van-search {
-    padding: 0;
-    border-radius: 17px;
-    overflow: hidden;
-  }
-
-  /deep/ .home-search .van-icon {
-    color: #0C34BA;
-  }
-
-  .like-item{
-    width: calc(~"100% / 3 - 10px + 10px / 3");
-    margin-right: 10px;
-    margin-bottom: 10px;
-    &:nth-child(3n){
-      margin-right: 0;
-    }
-  }
-}
-</style>

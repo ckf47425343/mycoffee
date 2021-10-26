@@ -1,11 +1,10 @@
 <template>
   <div class="shopbag">
+
+    
     <van-nav-bar
       title="购物袋"
-      left-text="返回"
-      left-arrow
       fixed
-      @click-left="back"
       @click-right="isEdit = !isEdit"
     >
       <template #right>
@@ -13,8 +12,8 @@
       </template>
     </van-nav-bar>
     <div v-if="shopbagData.length == 0">
-      <van-empty description="购物袋空空如也，去逛一逛!">
-        <van-button round color="#0C34BA" class="bottom-button" @click="goHome()">
+      <van-empty description="亲,您的购物袋空空如也!">
+        <van-button round class="bottom-button" @click="goHome()">
           逛一逛
         </van-button>
       </van-empty>
@@ -43,7 +42,7 @@
                     <van-checkbox
                       @change="simpleSelect"
                       v-model="item.isChecked"
-                      checked-color="#0C34BA"
+                      checked-color="#5f4121"
                     />
                   </div>
                   <div class="fl pro-info-box">
@@ -91,8 +90,9 @@
         v-if="!isEdit"
         :price="total"
         button-text="提交订单"
-        button-color="#0C34BA"
+        button-color="#5f4121"
         @submit="commit"
+        
       >
         <van-checkbox v-model="isAllChecked" @click="allSelect"
           >全选</van-checkbox
@@ -105,7 +105,7 @@
         button-color="#EE0A24"
         @submit="removeSelected"
       >
-        <van-checkbox v-model="isAllChecked" @click="allSelect"
+        <van-checkbox v-model="isAllChecked"  checked-color="#5f4121" @click="allSelect"
           >全选</van-checkbox
         >
       </van-submit-bar>
@@ -122,6 +122,8 @@ export default {
       isCheck: false,
       count: 2,
       isAllChecked: false,
+
+      isHasNav:false,
 
       // 触发加载
       loading: true,
@@ -152,6 +154,8 @@ export default {
   created() {
     //获取购物袋数据
     this.getShopbagData();
+    
+    console.log(window.history)
   },
 
   methods: {

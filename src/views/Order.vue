@@ -11,8 +11,8 @@
       <div v-if="isHas">
         <van-tabs
           v-model="tabIndex"
-          color="#0C34BA"
-          title-active-color="#0C34BA"
+          color="#5f4121"
+          title-active-color="#5f4121"
           line-height="2"
           @change="changeTab"
         >

@@ -10,9 +10,9 @@
           </div>
           <div class="pro-name one-text">{{item.name}}</div>
           <div class="pro-enname one-text">{{item.enname}}</div>
-          <div class="clearfix">
-            <div class="fl pro-price">￥{{item.price}}</div>
-            <div class="fr delete" @click.stop="remove()" v-if="isRemove">
+          <div class="flex-box">
+            <div class="pro-price">￥{{item.price}}</div>
+            <div class="delete" @click.stop="remove()" v-if="isRemove">
               <van-icon name="delete" />
             </div>
           </div>
@@ -72,18 +72,25 @@
     font-size: 12px;
     color: #999;
   }
+  .flex-box{
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+  }
 
   .pro-price{
     font-size: 14px;
-    color: #0C34BA;
+    color: #5f4121;
     font-weight: bold;
   }
 
   .delete{
     width: 15px;
     height: 15px;
-    margin-top: 2px;
-    color: #999;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+    color: #5f4121;
   }
   }
 </style>

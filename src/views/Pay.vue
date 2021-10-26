@@ -194,7 +194,7 @@ export default {
           this.$toast(result.data.msg)
           return this.$router.push('Login')
         }else if(result.data.code==60000){
-         this.$router.push({name:'Order'})
+           console.log(this.$router.replace('/order'))
         }
         
          this.$toast(result.data.msg)

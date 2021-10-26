@@ -20,6 +20,7 @@
 </template>
 
 <script>
+   import '@/assets/less/address.less'
   import BgBox from '../components/BgBox.vue'
   export default {
 
@@ -35,7 +36,7 @@
     created(){
       this.getAddressList()
     },
-  
+
     methods: {
   //     ```txt
   // 查询地址接口
@@ -91,43 +92,43 @@
   }
 </script>
 
-<style lang="less" scoped>
-  .address{
-    padding-top: 46px;
-    padding-bottom:60px ;
+// <style lang="less" scoped>
+//   .address{
+//     padding-top: 46px;
+//     padding-bottom:60px ;
 
-     /deep/ .van-nav-bar .van-icon {
-        color: #0c34ba;
-      }
+//      /deep/ .van-nav-bar .van-icon {
+//         color: #0c34ba;
+//       }
 
-      /deep/ .van-nav-bar__text {
-        color: #0c34ba;
-      }
+//       /deep/ .van-nav-bar__text {
+//         color: #0c34ba;
+//       }
 
-    /deep/ .van-tag--danger{
-      background-color: #0C34BA;
-    }
+//     /deep/ .van-tag--danger{
+//       background-color: #0C34BA;
+//     }
 
-    /deep/ .van-address-item .van-radio__icon--checked .van-icon{
-      background-color: #0C34BA;
-      border-color: #0C34BA;
-    }
+//     /deep/ .van-address-item .van-radio__icon--checked .van-icon{
+//       background-color: #0C34BA;
+//       border-color: #0C34BA;
+//     }
 
-    /deep/ .van-address-list{
-      padding: 0;
-    }
+//     /deep/ .van-address-list{
+//       padding: 0;
+//     }
 
-    /deep/ .van-address-item{
-      padding: 0 0 10px 0;
-      border-bottom: 1px solid #e8e8e8;
-      &:last-child{
-        border-bottom: none;
-      }
-    }
+//     /deep/ .van-address-item{
+//       padding: 0 0 10px 0;
+//       border-bottom: 1px solid #e8e8e8;
+//       &:last-child{
+//         border-bottom: none;
+//       }
+//     }
 
-    /deep/ .van-button--danger{
-      background-color: #0C34BA;
-      border-color: #0C34BA;
-    }
-  }
-</style>
+//     /deep/ .van-button--danger{
+//       background-color: #0C34BA;
+//       border-color: #0C34BA;
+//     }
+//   }
+// </style>

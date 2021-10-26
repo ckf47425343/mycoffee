@@ -1,0 +1,39 @@
+@import './style.less';
+.address {
+  padding-top: 46px;
+  padding-bottom: 60px;
+
+  .van-nav-bar .van-icon {
+    color: @pageColor !important;
+  }
+
+  .van-nav-bar__text {
+    color: @pageColor;
+  }
+
+  .van-tag--danger {
+    background-color: @pageColor;
+  }
+
+  .van-address-item .van-radio__icon--checked .van-icon {
+    background-color: @pageColor;
+    border-color: @pageColor;
+  }
+
+  .van-address-list {
+    padding: 0;
+  }
+
+  .van-address-item {
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #e8e8e8;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .van-button--danger {
+    background-color: @pageColor;
+    border-color: @pageColor;
+  }
+}

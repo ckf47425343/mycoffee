@@ -1,5 +1,5 @@
-.login{
-
+@import './style.less';
+.login {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -7,73 +7,72 @@
   right: 0;
   background-color: #fff;
 
-  .nav-left{
+  .nav-left {
     display: flex;
   }
 
-  .logo{
+  .logo {
     width: 34px;
     height: 34px;
     border-radius: 50%;
     margin-top: 6px;
   }
 
-  .logo-text{
+  .logo-text {
     font-size: 16px;
     font-weight: bold;
     margin-left: 10px;
     line-height: 46px;
   }
 
-  /deep/ .van-nav-bar__text{
-    color: #0C34C9;
+  .van-nav-bar__text {
+    color: @pageColor;
     font-weight: bold;
   }
 
-  .user-box{
+  .user-box {
     margin-top: 100px;
     padding: 0 15px;
   }
 
-  .welcome{
+  .welcome {
     font-size: 28px;
     font-weight: bold;
   }
 
-  .sub-title{
+  .sub-title {
     margin-top: 30px;
-    color: #83838B;
+    color: #83838b;
     font-size: 16px;
   }
 
-  .user-title{
+  .user-title {
     margin-bottom: 50px;
   }
 
-  .commit-btn{
+  .commit-btn {
     margin-top: 50px;
   }
 
-  .forgot{
+  .forgot {
     text-align: right;
     color: #666666;
     font-size: 14px;
     margin-top: 20px;
   }
 
-  .register-box{
+  .register-box {
     padding: 15px 0;
   }
 
-  .register-btn{
+  .register-btn {
     padding: 0 15px;
   }
 
-  .register-title{
+  .register-title {
     font-size: 24px;
     font-weight: bold;
     padding: 0 15px;
     margin-bottom: 50px;
   }
-
 }
