@@ -2,9 +2,9 @@
   <div class="login">
 
     <van-nav-bar
-      left-text="返回"
+   
       right-text="先逛一逛"
-      @click-right="goState"
+      @click-right="goState('Home')"
     >
       <template #left>
         <div class="nav-left">
@@ -42,15 +42,15 @@
           maxlength="6"
         >
            <template #button>
-            <van-button size="small" color="#0C34BA" :disabled="isSend" @click="getValidCode">{{text}}</van-button>
+            <van-button size="small" color="#5f4121" :disabled="isSend" @click="getValidCode">{{text}}</van-button>
           </template>
         </van-field>
         <div class="forgot">
-          <span @click="goState('Login')">已有账号，立即登录</span>
+          <span @click="('Home')('Login')">已有账号，立即登录</span>
         </div>
 
         <div class="commit-btn">
-          <van-button @click="next" round block color="#0C34BA">
+          <van-button @click="next" round block color="#5f4121">
             下一步
           </van-button>
         </div>
@@ -82,7 +82,7 @@
         </div>
 
         <div class="commit-btn">
-          <van-button round block color="#0C34BA" @click="commit">
+          <van-button round block color="#5f4121" @click="commit">
             提交
           </van-button>
         </div>

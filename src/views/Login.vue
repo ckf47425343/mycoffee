@@ -47,12 +47,12 @@
         </div>
 
         <div class="commit-btn">
-          <van-button round block color="#0C34BA" @click="login">
+          <van-button round block color="#5f4121" @click="login">
             登录
           </van-button>
         </div>
         <div class="commit-btn">
-          <van-button round block type="default" @click="toggleRegisterBox">
+          <van-button round block type="default"  @click="toggleRegisterBox">
             注册
           </van-button>
         </div>
@@ -93,7 +93,7 @@
         />
 
         <div class="commit-btn register-btn">
-          <van-button round block color="#0C34BA" @click="register">
+          <van-button round block color="#5f4121" @click="register">
             注册
           </van-button>
         </div>
@@ -106,7 +106,7 @@
 
 <script>
   //导入外部样式表
-  import '../assets/less/login.less'
+  import '@/assets/less/login.less'
  
 
   //导入表单验证模块

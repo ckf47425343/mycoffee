@@ -32,7 +32,7 @@
         <div class="shopbag-product">
           <div
             class="shopbag-item"
-            v-for="(item, index) in shopbagData"
+            v-for="(item) in shopbagData"
             :key="item.sid"
           >
             <div class="cell-item">
@@ -72,14 +72,14 @@
                     </div>
                   </div>
                 </div>
-                <template #right>
+                <!-- <template #right>
                   <van-button
                     square
                     type="danger"
                     text="删除"
                     @click="removeOne(index, item.sid)"
                   />
-                </template>
+                </template> -->
               </van-swipe-cell>
             </div>
           </div>

@@ -55,7 +55,7 @@
         >
           <li
             class="list-item"
-            v-for="(t, i) in item.result"
+            v-for="(t, i) in item.data.result"
             :key="i"
             ref="refLis"
           >
@@ -113,7 +113,7 @@ export default {
     //获取商品列表
     getProductType() {
       getProductType({ appkey: this.appkey }).then((result) => {
-        this.productType = result.result
+        this.productType = result.data.result
         //获取商品类型
         this.getTypeProducts()
       })
@@ -159,7 +159,7 @@ export default {
         len = 0
 
       this.productDatas.forEach((item, index) => {
-        len = item.result.length
+        len = item.data.result.length
         offsetTop += offsetHeight
         offsetHeight = len * (height + spacing)
         this.ulCache[index] = {
@@ -171,7 +171,7 @@ export default {
       ;(offsetTop = 0), (offsetHeight = 0)
       //计算每个li元素的offsetHeight,offsetTop
       this.productDatas.forEach((item, index) => {
-        item.result.forEach((item, index) => {
+        item.data.result.forEach((item, index) => {
           offsetTop += offsetHeight + spacing
           offsetHeight = height
           delete this.liCache[item.pid]
@@ -203,6 +203,8 @@ export default {
       })
       Promise.all(arr).then((result) => {
         this.productDatas = result
+    
+        
 
         let offsetTop = 0,
           offsetHeight = 0

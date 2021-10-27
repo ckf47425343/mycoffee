@@ -29,7 +29,7 @@ instance.interceptors.response.use(response=>{
     console.log('response',response)
     // Promise.resolve('asdasdasd')
    
-    return response.data
+    return   {data:response.data}
      
 },
 error=>{

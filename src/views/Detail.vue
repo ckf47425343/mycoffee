@@ -244,10 +244,6 @@ export default {
     getShopCatCount() {
       let tokenString = localStorage.getItem("__tk");
       let appkey = this.appkey;
-      if (!tokenString) {
-        this.$toast("请先登录");
-        return this.$router.push({ name: "Login" });
-      }
       this.getAxios(
         {
           method: "GET",
@@ -260,7 +256,7 @@ export default {
         (result) => {
           if (result.data.code == 700) {
             this.$toast(result.data.msg);
-            return this.$router.push({ name: "Login" });
+          
           } else if (result.data.code == 5000) {
             let data = result.data.result;
             this.shopBagCount = data.length;

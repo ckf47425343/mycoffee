@@ -50,7 +50,7 @@ const routes = [
         name: 'My',
         component: () => import('../views/My.vue'),
         meta:{
-          keepAlive:true
+          keepAlive:false
         },
       }
     ]

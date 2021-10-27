@@ -8,48 +8,62 @@
       @click-left="back"
     />
     <BgBox>
-      <van-cell title="头像" :center="true">
-        <div>
-          <div class="user-img fr">
+
+  
+        <div class="avatar-box">
+          <div class="user-img ">
             <img class="auto-img" :src="accountInfo.userImg" alt="" />
-            <van-uploader class="upload-box" :after-read="uploadUserImg" />
+            <van-uploader   accept="image/png, image/jpeg,image/jpg" class="upload-box" :after-read="uploadUserImg" />
           </div>
         </div>
-      </van-cell>
-      <van-cell title="用户id" :center="true">{{accountInfo.userId}}</van-cell>
-      <van-cell title="手机号" :center="true">{{accountInfo.phone}}</van-cell>
-      <van-cell title="昵称" :center="true">
+         
         <van-field
-          v-model="accountInfo.nickName"
-          class="field-box"
+          v-model="accountInfo.userId"
+          disabled
+          label="用户id:"
           placeholder="输入昵称"
           maxlength="12"
-          @change="updateNickName"
+           input-align="left"
         />
-      </van-cell>
-      <div class="desc-box">
-        <div class="desc-content">
           <van-field
-            v-model="accountInfo.desc"
-            rows="5"
-            autosize
-            label="简介"
-            type="textarea"
-            maxlength="50"
-            placeholder="输入简介"
-            show-word-limit
-            input-align="right"
-            @change="updateDesc"
-          />
-        </div>
-      </div>
+          v-model="accountInfo.phone"
+          label="用户手机:"
+           disabled
+           input-align="left"
+        />
+        <van-field
+          v-model="accountInfo.nickName"
+          label="用户呢称:"
+          placeholder="输入昵称"
+          maxlength="12"
+           input-align="left"
+        />
+        <van-field
+         type="textarea"
+          v-model="accountInfo.desc"
+          label="个人说明:"
+          placeholder="请输入内容"
+          maxlength="200"
+           input-align="left"
+        />
+
+        <div style="margin: 16px;">
+    <van-button round block type="primary" @click="updatePersonInfo">
+      提交
+    </van-button>
+  </div>
+    
+     
     </BgBox>
   </div>
 </template>
 
 <script>
+
+
 import "../assets/less/account.less";
 import BgBox from "../components/BgBox.vue";
+import {getAccountInfo,updateNickname,updatePersonDes,updateUserBg} from '@/api/api.js';
 export default {
   name: "Account",
   components: {
@@ -57,6 +71,7 @@ export default {
   },
   data() {
     return {
+      //账户信息
       accountInfo: {
         nickName: '',
         desc: '',
@@ -64,8 +79,18 @@ export default {
         userId: '',
         desc: ''
       },
+      //上一个页面
+      fullPath:''
+      
     };
   },
+
+ beforeRouteEnter (to, from, next) {
+   next((vm)=>{
+     vm.fullPath=from.fullPath
+   })
+ },
+
   created() {
     //获取个人资料
     this.getAccountInfo();
@@ -77,6 +102,8 @@ export default {
 
     //获取个人资料
     getAccountInfo() {
+    
+      
       let tokenString = localStorage.getItem("__tk");
 
       if (!tokenString) {
@@ -90,16 +117,11 @@ export default {
         forbidClick: true,
         duration: 0,
       });
-
-      this.axios({
-        method: "GET",
-        url: "/findAccountInfo",
-        params: {
+       
+       getAccountInfo({
           appkey: this.appkey,
           tokenString,
-        },
-      })
-        .then((result) => {
+        }).then((result) => {
           this.$toast.clear();
           
           if (result.data.code == 700) {
@@ -111,12 +133,21 @@ export default {
               data.desc = '这家伙很懒，什么都没有留下！'
             } 
             this.accountInfo = data;
+
+              let {nickName,desc}=this.accountInfo
+
+              this.copyAcountInfo={nickName,desc}
+
+           
+
           }
         })
         .catch((err) => {
           this.$toast.clear();
           
         });
+
+        
     },
 
     //上传用户头像
@@ -192,97 +223,102 @@ export default {
     },
 
     //修改昵称
-    updateNickName() {
+    updatePersonInfo() {
 
-      if (!this.accountInfo.nickName) {
-        this.$toast('昵称不能为空');
+      let  updateKey=[]
+
+      if(this.accountInfo['nickName']==''){
+         return  this.$toast('昵称不能为空')
       }
+   
+     for(let key in this.copyAcountInfo){
+          
+         if(this.accountInfo[key]!=this.copyAcountInfo[key]){
+              updateKey.push(key)
+         }
+          
+     }
+     if(updateKey.length==0){
+       return  this.$toast('请先修改信息')
+     }
+
+     //修改呢称
 
       let tokenString = localStorage.getItem("__tk");
+      let appkey=this.appkey
+      
 
-      if (!tokenString) {
-        //跳回登录页面
-        this.$toast("请先登录");
-        return this.$router.push({ name: "Login" });
-      }
 
-      this.$toast.loading({
+    let arrRequest=updateKey.map((item,index)=>{
+         
+         
+         if(item=='nickName'){ 
+           return updateNickname({tokenString,appkey,nickName:this.accountInfo.nickName})
+         }
+         if(item=='desc'){
+           return updatePersonDes({tokenString,appkey,desc:this.accountInfo.desc})
+         }
+
+
+
+     })
+     
+     if(arrRequest.length>0){
+       this.$toast.loading({
         message: "加载中...",
         forbidClick: true,
         duration: 0,
       });
+          Promise.all(arrRequest).then(result=>{
+            console.log(result)
+                 if(result.length>0){
+                   let {nickName,desc}=this.accountInfo
+                   this.copyAcountInfo={nickName,desc}
+                   this.$toast.clear();
+                   this.$toast('修改个人信息成功')
+                   this.$router.replace(this.fullPath)
+                 }
+          }).catch(err=>{
+              this.$toast.clear();
+               this.$toast('修改个人信息失败')
+          })
+     }
+     
 
-      this.axios({
-        method: "POST",
-        url: "/updateNickName",
-        data: {
-          appkey: this.appkey,
-          tokenString,
-          nickName: this.accountInfo.nickName
-        },
-      })
-        .then((result) => {
-          this.$toast.clear();
+
+     //修改个人信息
+
+
+
+      
+
+      // this.axios({
+      //   method: "POST",
+      //   url: "/updateNickName",
+      //   data: {
+      //     appkey: this.appkey,
+      //     tokenString,
+      //     nickName: this.accountInfo.nickName
+      //   },
+      // })
+      //   .then((result) => {
+      //     this.$toast.clear();
           
-          if (result.data.code == 700) {
-            //token检验无效,则跳到登录页面
-            this.$router.push({ name: "Login" });
-          } else {
-            this.$toast(result.data.msg);
-          }
+      //     if (result.data.code == 700) {
+      //       //token检验无效,则跳到登录页面
+      //       this.$router.push({ name: "Login" });
+      //     } else {
+      //       this.$toast(result.data.msg);
+      //     }
           
-        })
-        .catch((err) => {
-          this.$toast.clear();
+      //   })
+      //   .catch((err) => {
+      //     this.$toast.clear();
           
-        });
+      //   });
     },
 
-    //修改简介
-    updateDesc() {
-      if (!this.accountInfo.nickName) {
-        this.$toast('昵称不能为空');
-      }
-
-      let tokenString = localStorage.getItem("__tk");
-
-      if (!tokenString) {
-        //跳回登录页面
-        this.$toast("请先登录");
-        return this.$router.push({ name: "Login" });
-      }
-
-      this.$toast.loading({
-        message: "加载中...",
-        forbidClick: true,
-        duration: 0,
-      });
-
-      this.axios({
-        method: "POST",
-        url: "/updateDesc",
-        data: {
-          appkey: this.appkey,
-          tokenString,
-          desc: this.accountInfo.desc
-        },
-      })
-        .then((result) => {
-          this.$toast.clear();
-          
-          if (result.data.code == 700) {
-            //token检验无效,则跳到登录页面
-            this.$router.push({ name: "Login" });
-          } else {
-            this.$toast(result.data.msg);
-          }
-          
-        })
-        .catch((err) => {
-          this.$toast.clear();
-          
-        });
-    }
+    
   },
 };
 </script>
