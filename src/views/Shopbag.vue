@@ -114,7 +114,8 @@
 </template>
 
 <script>
-import "../assets/less/shopbag.less";
+import "@/assets/less/shopbag.less";
+import {getShopCart,delShopCart,modifyShopCartCount} from '@/api/api.js'
 export default {
   name: "Shopbag",
   data() {
@@ -155,7 +156,7 @@ export default {
     //获取购物袋数据
     this.getShopbagData();
     
-    console.log(window.history)
+  
   },
 
   methods: {
@@ -171,12 +172,12 @@ export default {
     getShopbagData() {
       //获取token
       let tokenString = localStorage.getItem("__tk");
-      // console.log('tokenString ==> ', tokenString);
-      if (!tokenString) {
-        //跳回登录页面
-        this.$toast("请先登录");
-       return this.$router.push({name:"Login" });
+      let appkey=this.appkey
+
+      if(!tokenString){
+          this.$router.push({name:'Login'})
       }
+
 
       this.$toast.loading({
         message: "加载中...",
@@ -185,21 +186,11 @@ export default {
       });
 
       //发起获取购物袋数据请求
-      this.axios({
-        method: "GET",
-        url: "/findAllShopcart",
-        params: {
-          appkey: this.appkey,
-          tokenString,
-        },
-      })
+     getShopCart({appkey,tokenString})
         .then((result) => {
           this.$toast.clear();
           console.log("shopbag result ==> ", result);
-          if (result.data.code == 700) {
-            //token检验无效,则跳到登录页面
-            this.$router.push({ name: "Login" });
-          } else if (result.data.code == 5000) {
+          if(result.data.code == 5000) {
             result.data.result.map((v) => {
               v.isChecked = false;
             });
@@ -303,15 +294,11 @@ export default {
         forbidClick: true,
         duration: 0,
       });
-
-      this.axios({
-        method: "POST",
-        url: "/deleteShopcart",
-        data: {
-          appkey: this.appkey,
+     delShopCart(
+       {
+         appkey: this.appkey,
           tokenString,
           sids: JSON.stringify([sid])
-        },
       })
         .then((result) => {
           this.$toast.clear();
@@ -377,16 +364,9 @@ export default {
         forbidClick: true,
         duration: 0,
       });
-
-      this.axios({
-        method: "POST",
-        url: "/deleteShopcart",
-        data: {
-          appkey: this.appkey,
+     delShopCart({appkey: this.appkey,
           tokenString,
-          sids: JSON.stringify(sids)
-        },
-      })
+          sids: JSON.stringify(sids)})
         .then((result) => {
           this.$toast.clear();
           console.log("count result ==> ", result);
@@ -436,17 +416,12 @@ export default {
         forbidClick: true,
         duration: 0,
       });
-
-      this.axios({
-        method: "POST",
-        url: "/modifyShopcartCount",
-        data: {
-          appkey: this.appkey,
+     modifyShopCartCount(
+       {appkey: this.appkey,
           tokenString,
           sid: item.sid,
           count: item.count
-        },
-      })
+        })
         .then((result) => {
           this.$toast.clear();
           console.log("count result ==> ", result);

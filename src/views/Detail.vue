@@ -86,7 +86,8 @@
 </template>
 
 <script>
-import "../assets/less/detail.less";
+import "@/assets/less/detail.less";
+import {getProductDetail,getShopCart,addShopCart,getLikeProduct,likeProduct,notLikeProduct} from '@/api/api.js'
 import { ImagePreview } from 'vant';
 export default {
   created() {
@@ -124,16 +125,8 @@ export default {
     getProductDetail() {
       let appkey = this.appkey;
       let pid = this.$route.params.pid;
-      this.getAxios(
-        {
-          methods: "GET",
-          url: "/productDetail",
-          params: {
-            appkey,
-            pid,
-          },
-        },
-        (result) => {
+     
+         getProductDetail({appkey,pid}).then(result => {
           console.log("productDetail==>", result);
           if (result.data.code == 600) {
             this.$toast(result.data.msg);
@@ -206,17 +199,8 @@ export default {
         count,
         rule,
       };
-      if (!tokenString) {
-        this.$toast("请先登录");
-        return this.$router.push({ name: "Login" });
-      }
-      this.getAxios(
-        {
-          method: "POST",
-          url: "/addShopcart",
-          data,
-        },
-        (result) => {
+      
+      addShopCart(data).then((result) => {
           console.log("result==>", result);
           if (result.data.code == 700) {
             this.$toast(result.data.msg);
@@ -238,22 +222,16 @@ export default {
           }
 
           this.$toast(result.data.msg);
-        }
-      );
+        })
     },
+
+
     getShopCatCount() {
       let tokenString = localStorage.getItem("__tk");
       let appkey = this.appkey;
-      this.getAxios(
-        {
-          method: "GET",
-          url: "/findAllShopcart",
-          params: {
-            tokenString,
-            appkey,
-          },
-        },
-        (result) => {
+
+    getShopCart({tokenString,appkey}).then((result) => {
+      console.log('result==>',result)
           if (result.data.code == 700) {
             this.$toast(result.data.msg);
           
@@ -261,32 +239,28 @@ export default {
             let data = result.data.result;
             this.shopBagCount = data.length;
           }
-        }
-      );
+        })
+     
+        
+      
     },
-    likeProduct() {
+  likeProduct() {
+    console.log('like',likeProduct)
       let tokenString = localStorage.getItem("__tk");
       let appkey = this.appkey;
       let pid = this.$route.params.pid;
-      let url = this.isLike ? "/notlike" : "/like";
-
-      console.log(tokenString, "==", appkey, pid);
-      if (!tokenString) {
-        this.$toast("请先登录");
-        return this.$router.push({ name: "Login" });
-      }
-      this.getAxios(
-        {
-          method: "POST",
-          url,
-          data: {
-            tokenString,
-            appkey,
-            pid,
-          },
-        },
-        (result) => {
-          console.log("like", result);
+      let pm
+    // if(!tokenString){
+    //     return
+    // }
+   
+     if(this.isLike){
+      pm=notLikeProduct({tokenString,appkey,pid})
+     }else{
+      pm=likeProduct({tokenString,appkey,pid})
+     }
+     pm.then(result=>{
+       console.log('result==>',result)
           if (result.data.code == 700) {
             return this.$router.push({ name: "Login" });
           } else if (result.data.code == 800) {
@@ -294,9 +268,8 @@ export default {
           } else if (result.data.code == 900) {
             this.isLike = false;
           }
-          this.$toast(result.data.msg);
-        }
-      );
+     })
+   
     },
     findlikeProduct() {
       let tokenString = localStorage.getItem("__tk");

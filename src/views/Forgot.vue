@@ -26,10 +26,10 @@
       <van-form v-show="!isNext">
 
         <van-field
-          v-model="userInfo.email"
-          name="邮箱"
-          label="邮箱"
-          placeholder="邮箱"
+          v-model="userInfo.phone"
+          name="手机号"
+          label="手机号"
+          placeholder="手机号"
           autocomplete="off"
         />
 
@@ -46,7 +46,7 @@
           </template>
         </van-field>
         <div class="forgot">
-          <span @click="('Home')('Login')">已有账号，立即登录</span>
+          <span @click="goState('Login')">已有账号，立即登录</span>
         </div>
 
         <div class="commit-btn">
@@ -57,7 +57,7 @@
       </van-form>
 
 
-      <van-form v-show="isNext">
+      <!-- <van-form v-show="isNext">
 
         <van-field
           v-model="userInfo.phone"
@@ -91,7 +91,7 @@
             返回
           </van-button>
         </div>
-      </van-form>
+      </van-form> -->
 
     </div>
 
@@ -100,10 +100,12 @@
 
 <script>
   //导入外部样式表
-  import '../assets/less/login.less'
+  import '@/assets/less/login.less'
 
   //导入表单验证模块
-  import {validForm} from '../assets/js/validForm'
+  import {validForm} from '@/assets/js/validForm'
+
+  import  {retroevePassword}  from '@/api/api.js';
 
   export default {
     name: 'Login',
@@ -114,7 +116,6 @@
         userInfo: {
           phone: '',
           password: '',
-          email: '',
           code: ''
         },
 
@@ -151,10 +152,15 @@
       next() {
         //构造表单验证信息
         let o = {
-          email: {
-            value: this.userInfo.email,
-            errorMsg: '邮箱格式不正确',
-            reg: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+          phone: {
+            value: this.userInfo.phone,
+            errorMsg: '手机号格式不正确',
+            reg: /^1[3-9]\d{9}$/
+          },
+          password: {
+            value: this.userInfo.password,
+            errorMsg: '密码格式不正确',
+            reg: /^[A-Za-z]\w{5,15}$/
           },
           code: {
             value: this.userInfo.code,
@@ -176,20 +182,8 @@
             forbidClick: true,
             duration: 0
           });
-
-          this.axios({
-            //请求类型
-            method: 'POST',
-            //请求路径
-            url: '/checkValidCode',
-
-            //POST请求参数, object
-            data: {
-              appkey: this.appkey,
-              validCode: this.userInfo.code
-            }
-
-          }).then(result => {
+      
+      retroevePassword(this.userInfo) .then(result => {
             this.$toast.clear();
 
             this.$toast(result.data.msg);
@@ -208,10 +202,12 @@
           })  
 
         }
+      
       },
 
       //跳转页面
       goState(name) {
+        console.log('name==>',name)
         this.$router.push({name});
       },
 
@@ -220,11 +216,11 @@
 
         //构造表单验证信息
         let o = {
-          email: {
-            value: this.userInfo.email,
-            errorMsg: '邮箱格式不正确',
-            reg: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-          }
+          phone: {
+            value: this.userInfo.phone,
+            errorMsg: '手机号格式不正确',
+            reg: /^1[3-9]\d{9}$/
+          },
         };
 
         let isPass = validForm.valid(o);

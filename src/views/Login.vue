@@ -107,10 +107,10 @@
 <script>
   //导入外部样式表
   import '@/assets/less/login.less'
- 
-
   //导入表单验证模块
   import {validForm} from '../assets/js/validForm'
+  //导读接口
+  import {login,register} from '@/api/api.js';
   export default {
     name: 'Login',
     data() {
@@ -149,7 +149,8 @@
       },
      //忘记密码
      forgot(){
-       this.$router.push({name:'Forgot'})
+       this.$toast('暂未开放此功能，敬请期待。')
+      //  this.$router.push({name:'Forgot'})
      },
       //注册
       register() {
@@ -182,21 +183,18 @@
           //复制用户注册信息
           let userInfo = Object.assign({}, this.userRegisterInfo);
           userInfo.appkey = this.appkey;
-          console.log('userInfo ==> ', userInfo);
-          console.log('this.userRegisterInfo ==> ', this.userRegisterInfo);
-           this.getAxios({
-             method:'POST',
-             url:'/register',
-             data:userInfo
-           },(result)=>{
-              console.log("test=>",result)
-              if (result.data.code == 100) {
+
+          register(userInfo).then(result=>{
+            console.log(result)
+             if (result.data.code == 100) {
+              this.$toast(result.data.msg)
               this.isShow = false;
             }else{
               //如果注册失败，手机被注册了
               this.$toast(result.data.msg);
             }
-           })
+          })
+          
         }
       },
 
@@ -222,24 +220,14 @@
           //复制用户注册信息
           let userInfo = Object.assign({}, this.userInfo);
           userInfo.appkey = this.appkey;
-
           this.$toast.loading({
             message: '加载中...',
             forbidClick: true,
             duration: 0
           });
 
-          //发起注册请求
-          this.axios({
-            //请求类型
-            method: 'POST',
-            //请求路径
-            url: '/login',
-
-            //POST请求参数, object
-            data: userInfo
-
-          }).then(result => {
+          //发起登录
+         login(userInfo).then(result => {
             this.$toast.clear();
 
             console.log('result ==> ', result);

@@ -84,8 +84,8 @@
 </template>
 
 <script>
-import '../assets/less/home.less'
-import { getProductType, getTypeProduct } from '../api/api.js'
+import '@/assets/less/home.less'
+import { getBanner,getProductType, getTypeProduct } from '@/api/api.js'
 
 export default {
   name: 'Home',
@@ -272,24 +272,8 @@ export default {
     },
     //获取轮播图数据
     getBannerData() {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-      })
-
-      //发起注册请求
-      this.axios({
-        //请求类型
-        method: 'GET',
-        //请求路径
-        url: '/banner',
-
-        //GET请求参数, object
-        params: {
-          appkey: this.appkey,
-        },
-      })
+      
+      getBanner({appkey:this.appkey})
         .then((result) => {
           this.$toast.clear()
 
