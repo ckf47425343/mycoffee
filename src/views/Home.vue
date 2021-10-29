@@ -47,21 +47,23 @@
         @scroll="handleScroll"
         @click="goDetail"
       >
+      <div class="list-box">
         <ul
           class="list"
           v-for="(item, index) in productDatas"
           ref="refUls"
           :key="index"
+          :class="{'last-list':index==(productType.length-1)}"
         >
           <li
             class="list-item"
-            v-for="(t, i) in item.data.result"
+            v-for="(t, i) in item.result"
             :key="i"
             ref="refLis"
           >
             <div class="click-box" :data-pid="t.pid"></div>
             <div class="left-box">
-              <img src="" :data-src="t.smallImg" :data-pid="t.pid" alt="" />
+              <img src="../assets/images/default.png" :data-src="t.smallImg" :data-pid="t.pid" alt="" />
             </div>
             <div class="right-box">
               <div class="name one-text">
@@ -79,13 +81,17 @@
           </li>
         </ul>
       </div>
+        
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import '@/assets/less/home.less'
-import { getBanner,getProductType, getTypeProduct } from '@/api/api.js'
+import '@/assets/less/home.less';
+import { getBanner,getProductType, getTypeProduct } from '@/api/api.js';
+import {debounce} from  '@/utils/index.js'
+
 
 export default {
   name: 'Home',
@@ -95,10 +101,24 @@ export default {
       productType: [],
       //商品数据
       productDatas: [],
+      //商品遍历的索引值
+      savaIndex:0,
       //侧边栏的索引值
       currentMenuIndex: 0,
+      //当前的currentUlIndex
+      ulElementIndex:0,
       //轮播图
       bannerData: [],
+      //计算内部盒子的高度
+      listHeight:0,
+      //初始阀值
+     isInitVal:true,
+     //缓存ul元素的信息
+     ulCache:{},
+    //缓存li元素的信息
+     liCache:{},
+     //请求阀值
+     isfetch:true
     }
   },
 
@@ -107,6 +127,9 @@ export default {
     this.getBannerData()
     //获取商品类型
     this.getProductType()
+
+    this.debounce=debounce(this.getTypeProducts,200,true)
+    
   },
 
   methods: {
@@ -118,70 +141,149 @@ export default {
         this.getTypeProducts()
       })
     },
+    //根据类型获取商品
+    getTypeProducts() {
+            
+            
+      
+             let key = 'type', appkey = this.appkey;
+                  
+
+               if(this.savaIndex>=this.productType.length){
+                 this.isfetch=false
+                   return
+               }
+
+            let index=this.savaIndex
+               
+
+           let value= this.productType[index].type
+
+           getTypeProduct({value,key,appkey}).then(result=>{
+               
+           
+
+              this.productDatas.push(result.data)
+            
+
+                this.getImgEle()
+
+
+              
+                 
+           })
+        
+
+     
+  
+    
+
+        
+    
+    },
     //更新完后获取dom信息
-    init() {
+    getImgEle(callBack) {
       this.$nextTick(() => {
-        this.box = this.$refs.content
+    
+          let len= this.productDatas.length
 
-        let li = this.box.getElementsByTagName('li')[0]
+          this.box = this.$refs.content
 
-        this.imgs = this.box.getElementsByTagName('img')
+          this.boxHeight = this.box.offsetHeight
 
-        this.boxHeight = this.box.offsetHeight
 
-        this.HeightVal = li.offsetHeight
+        for(let index=this.ulElementIndex;index<len;index++){
+           let ul= this.box.getElementsByTagName('ul')[index]
 
-        this.MarginVal = Math.ceil(
-          getComputedStyle(li, null)
-            .getPropertyValue('margin-top')
-            .slice(0, -2)
-        )
+           this.imgs = ul.getElementsByTagName('img')
 
-        this.getListItem()
+           this.ulElementIndex=len
 
-        this.currentMenuIndex = 0
+             let li=ul.children[1]
+     
+           this.HeightVal =li.offsetHeight
+      
+           
+     
+           this.MarginVal=Math.ceil(getComputedStyle(li,null).getPropertyValue('margin-top').slice(0,-2))
+           
+          
+         //初始化listHeight
+           this.cacheEleInfo(index)
 
-        this.handleScroll({ target: this.box })
+           
+        if(this.isInitVal){
+           this.isInitVal=false
+
+        
+
+           this.handleScroll({ target: this.box })
+        } 
+       }
+
+          // 执行回调
+       if(callBack){
+         callBack()
+       }
+     
       })
     },
     //获取列表的offsetHeight,offsetTop信息
-    getListItem() {
+    cacheEleInfo(currentIndex) {
       //计算每个ul的offsetTop,以及offsetHeight
+      
+      
 
-      this.ulCache = {}
-      this.liCache = {}
-
-      let height = parseInt(this.HeightVal),
-        spacing = parseInt(this.MarginVal)
-
-      let offsetHeight = 0,
-        offsetTop = 0,
-        len = 0
-
-      this.productDatas.forEach((item, index) => {
-        len = item.data.result.length
-        offsetTop += offsetHeight
-        offsetHeight = len * (height + spacing)
-        this.ulCache[index] = {
-          offsetHeight,
-          offsetTop,
+      let height = parseInt(this.HeightVal),spacing = parseInt(this.MarginVal);
+           
+      let offsetHeight = 0,len = 0;
+      
+      
+    //计算每个li元素的offsetHeight,offsetTop
+     
+     this.productDatas[currentIndex].result.forEach((item,index)=>{
+        if(!this.liCache.hasOwnProperty(item.pid)){
+       
+          this.liCache[item.pid] = { offsetHeight:height, offsetTop:this.listHeight }
+       
+     
+          this.listHeight=height+spacing+this.listHeight
+      
+           
         }
-      })
-      //重置数据
-      ;(offsetTop = 0), (offsetHeight = 0)
-      //计算每个li元素的offsetHeight,offsetTop
-      this.productDatas.forEach((item, index) => {
-        item.data.result.forEach((item, index) => {
-          offsetTop += offsetHeight + spacing
-          offsetHeight = height
-          delete this.liCache[item.pid]
-          this.liCache[item.pid] = { offsetHeight, offsetTop }
-        })
-      })
+     })
 
+     if(currentIndex==0){
+       this.listHeight=this.listHeight-spacing
+     }
+  
+     if(!this.ulCache.hasOwnProperty(currentIndex)){
+   
+     
+         len = this.productDatas[currentIndex].result.length
+        
+        
+        
+      
+        offsetHeight =len*(height+spacing)-spacing
+
+        this.ulCache[currentIndex] = {
+          offsetHeight,
+          offsetTop:this.listHeight-offsetHeight
+        }
+     
+ 
+      }
+
+      this.savaIndex=this.productDatas.length
+      
+      
+      
+        
+      console.dir('imgs==>',this.imgs)
       //获取缓存img元素
       Array.from(this.imgs).forEach((item, index) => {
-        console.log(item.dataset)
+           
         let pid = item.dataset.pid
         let src = item.dataset.src
         if (pid) {
@@ -190,55 +292,94 @@ export default {
         }
       })
 
-      console.log('liCache==>', this.liCache)
+      
     },
-    //根据类型获取商品
-    getTypeProducts() {
-      let key = 'type',
-        appkey = this.appkey,
-        value
-      let arr = this.productType.map((item, index) => {
-        value = item.type
-        return getTypeProduct({ key, value, appkey })
-      })
-      Promise.all(arr).then((result) => {
-        this.productDatas = result
     
-        
-
-        let offsetTop = 0,
-          offsetHeight = 0
-
-        this.init()
-      })
-    },
     //跳转到详情页
     asideScroll(e) {
       e.stopPropagation()
     },
     //切换菜单
     ToggleMenu(e) {
-      let index = parseInt(e.target.dataset.index)
-      this.currentMenuIndex = index
-      this.box.scrollTop = this.ulCache[index].offsetTop
+   
+
+      let index = e?parseInt(e.target.dataset.index):this.savaIndex
+
+      
+
+     if(index<this.savaIndex){
+
+        this.currentMenuIndex = index
+
+        this.box.scrollTop = this.ulCache[index].offsetTop
+         
+         return
+     }
+     
+      this.isfetch=false
+
+       let prArr=[] 
+
+       let key = 'type', appkey = this.appkey,value='';
+
+       
+
+     for(let t=this.savaIndex;t<=index;t++){
+         
+          value=this.productType[t].type
+          
+         prArr.push(getTypeProduct({key,appkey,value}))   
+     }
+
+     
+
+     Promise.all(prArr).then(result=>{
+    
+        result.map((v,i)=>{
+             this.productDatas.push(v.data)
+        })
+       this.getImgEle(()=>{
+          
+                   this.box.scrollTop=this.ulCache[this.savaIndex-1].offsetTop
+                   this.isfetch=true
+
+            
+             })
+
+   
+            
+        
+        
+      
+       
+     })
+
+     
+      
     },
     //触发滚动
     handleScroll(e) {
-      let scrollTop = e.target.scrollTop + 50
+    
+  
+      
+      let scrollTop = e.target.scrollTop 
       let currentKey = 0,
         topVal,
         bottomVal
       let obj = this.ulCache
+
+      
       //目前的所在的选项
       for (let key in obj) {
         topVal = obj[key].offsetTop
         bottomVal = obj[key].offsetTop + obj[key].offsetHeight
 
         if (scrollTop >= topVal && scrollTop <= bottomVal) {
+          
           this.currentMenuIndex = parseInt(key)
         }
       }
-      //加载显示区图片
+    //  加载显示区图片
       let liObj = this.liCache
 
       for (let key in liObj) {
@@ -246,13 +387,24 @@ export default {
           liObj[key].offsetTop >= scrollTop - 100 &&
           liObj[key].offsetTop < scrollTop + this.boxHeight
         ) {
-          console.log(liObj[key].node, liObj[key].imgSrc)
 
           liObj[key].node.src = liObj[key].imgSrc
 
           delete liObj[key]
         }
       }
+      
+     //触底
+      if(scrollTop+this.boxHeight*1.5>=this.listHeight&&this.isfetch){
+       
+       
+        this.debounce()
+          //即将触底
+          //拉取数据
+         
+      }
+      
+      
     },
     //跳转到详情页
     goDetail(e) {
@@ -276,9 +428,6 @@ export default {
       getBanner({appkey:this.appkey})
         .then((result) => {
           this.$toast.clear()
-
-          console.log('result ==> ', result)
-
           if (result.data.code == 300) {
             this.bannerData = result.data.result
           }
@@ -286,100 +435,16 @@ export default {
         .catch((err) => {
           this.$toast.clear()
 
-          console.log('err ==> ', err)
+
         })
     },
 
-    //获取热卖推荐商品
-    getHotProduct() {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-      })
-
-      //发起注册请求
-      this.axios({
-        //请求类型
-        method: 'GET',
-        //请求路径
-        url: '/typeProducts',
-
-        //GET请求参数, object
-        params: {
-          appkey: this.appkey,
-          key: 'isHot',
-          value: 1,
-        },
-      })
-        .then((result) => {
-          this.$toast.clear()
-
-          console.log('result ==> ', result)
-
-          if (result.data.code == 500) {
-            this.allProduct = result.data.result
-
-            this.currentLoadProduct = this.allProduct.slice(
-              this.startLoadIndex,
-              this.currentCount
-            )
-            this.startLoadIndex += this.currentCount
-            console.log('currentLoadProduct==>', this.currentLoadProduct)
-            this.loading = false
-          }
-        })
-        .catch((err) => {
-          this.$toast.clear()
-
-          console.log('err ==> ', err)
-        })
-    },
-    //缓加载
-    loadData() {
-      console.log('数据没有更新')
-      // 异步更新数据
-      let currentLoadProduct = this.currentLoadProduct
-      let allProduct = this.allProduct
-      setTimeout(() => {
-        let newdata = allProduct.slice(
-          this.startLoadIndex,
-          this.startLoadIndex + this.currentCount
-        )
-        console.log('newdata==>', newdata)
-        this.startLoadIndex += this.currentCount
-        currentLoadProduct.push(...newdata)
-        console.log('currentLoadProduct==>', currentLoadProduct)
-        if (newdata.length < this.currentCount) {
-          this.finished = true
-        } else {
-          this.loading = false
-        }
-      }, 500)
-    },
-    //查看商品详情页面
-    // goDetail(pid) {
-    //   this.$router.push({ name: "Detail", params: { pid } });
-    // },
-  },
-
-  watch: {
-    liCache: {
-      handler(oldVal, newVal) {
-        console.log('watch==>', oldVal)
-      },
-    },
   },
 
   mounted() {
-    //获取li元素的位置信息
-    //获取li元素的图片元素
-    // setTimeout(()=>{
-    //    document.documentElement.scrollTop='1000'as
-    // },1000)
   },
   updated() {
-    console.log('update==>')
+    
   },
 }
 </script>

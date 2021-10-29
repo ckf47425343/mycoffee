@@ -59,6 +59,7 @@ import "../assets/less/order.less";
 import BgBox from "../components/BgBox.vue";
 import OrderList from "../components/OrderList.vue";
 import OrderItem from "../components/OrderItem.vue";
+import {getOrder,receiveOrder,delOrder} from '@/api/api.js'
 export default {
   name: "Order",
   data() {
@@ -116,15 +117,12 @@ export default {
         this.isHas=false
         return this.$router.push({ name: "Login" });
       }
-     this.getAxios({
-        method: "GET",
-        url: "/findOrder",
-        params: {
-          appkey: this.appkey,
+      getOrder(
+         {
+           appkey: this.appkey,
           tokenString,
-          status: this.tabIndex,
-        },
-     },(result) => {
+          status: this.tabIndex
+          }).then((result) => {
           this.$toast.clear();
           
           if (result.data.code == 700) {
@@ -167,9 +165,10 @@ export default {
             });
 
             this.orderData = orderDatas.reverse();
-            console.log(this.orderData)
+            
           }
         })
+     
         
     },
 
@@ -185,17 +184,13 @@ export default {
       }
 
      
-
-      this.getAxios({
-        method: "POST",
-        url: "/receive",
-        data:{
+     receiveOrder(
+        {  
           appkey: this.appkey,
           tokenString,
           oid: item.oid
-        },
-      },(result) => {
-          this.$toast.clear();
+          }).then((result) => {
+        
           
           if (result.data.code == 700) {
             //token检验无效,则跳到登录页面
@@ -209,6 +204,8 @@ export default {
 
           this.$toast(result.data.msg);
         })
+
+     
         
         
 
@@ -228,17 +225,11 @@ export default {
       }
 
      
-
-      this.getAxios({
-        method: "POST",
-        url: "/removeOrder",
-        data: {
-          appkey: this.appkey,
+    delOrder(
+        {appkey: this.appkey,
           tokenString,
-          oid
-        },
-      }, (result) => {
-          this.$toast.clear();
+          oid}).then((result) => {
+        
           
           if (result.data.code == 700) {
             //token检验无效,则跳到登录页面
@@ -249,6 +240,7 @@ export default {
 
           this.$toast(result.data.msg);
         })
+    
        
        
 

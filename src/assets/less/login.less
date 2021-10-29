@@ -5,7 +5,23 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #fff;
+  background: url('../images/login_bg.jpg');
+  background-size: 100% 100%;
+  .van-nav-bar__text {
+    color: #fff !important;
+  }
+  .van-cell {
+    background: transparent;
+  }
+  .van-field__label {
+    color: #fff;
+  }
+  .van-nav-bar {
+    background: none;
+  }
+  [class*='van-hairline']::after {
+    border: none;
+  }
 
   .nav-left {
     display: flex;
@@ -42,12 +58,13 @@
 
   .sub-title {
     margin-top: 30px;
-    color: #83838b;
+    color: #fff;
     font-size: 16px;
   }
 
   .user-title {
     margin-bottom: 50px;
+    color: #fff;
   }
 
   .commit-btn {
@@ -56,13 +73,17 @@
 
   .forgot {
     text-align: right;
-    color: #666666;
+    color: #fff;
     font-size: 14px;
     margin-top: 20px;
   }
 
   .register-box {
     padding: 15px 0;
+
+    .van-field__label {
+      color: #000;
+    }
   }
 
   .register-btn {

@@ -27,7 +27,7 @@ instance.defaults.baseURL='http://www.kangliuyong.com:10002'
 //           obj[arrItem[0]]=arrItem[1]
 //    })
 
-//    console.log('obj==>',obj)
+//    
 
 //    if(obj.hasOwnProperty('tokenString')){
 //            if(!obj.tokenString){
@@ -42,7 +42,7 @@ instance.defaults.baseURL='http://www.kangliuyong.com:10002'
 
 //请求拦截器
 instance.interceptors.request.use(config=>{
-    console.log('config==>',config)
+    
 
     // let url=config.method=='get'?config.url:config.data
    
@@ -64,11 +64,11 @@ instance.interceptors.response.use(response=>{
  
     Toast.clear()
 
-    console.log('response==>',response)
+    
 
     if(response.data.code==700&&response.config.method=='post'){
 
-        console.log('进入了==》')
+        
      
            Toast('请先登录')
 

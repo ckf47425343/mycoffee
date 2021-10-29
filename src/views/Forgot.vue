@@ -207,7 +207,7 @@
 
       //跳转页面
       goState(name) {
-        console.log('name==>',name)
+        
         this.$router.push({name});
       },
 

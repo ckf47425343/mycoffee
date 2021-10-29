@@ -124,7 +124,7 @@ export default {
 
           if (result.data.code == 400) {
             let data = result.data.result;
-            console.log("data==>",data)
+            
             data.unshift({
               type: 'isHot',
               typeDesc: '推荐'

@@ -9,12 +9,16 @@
     />
     <BgBox>
       <van-address-list
+        v-if="list.length>0"
         :list="list"
          default-tag-text="默认"
         :switchable="false"
         @add="add"
         @edit="edit"
       />
+      <div v-else class="empty">
+        <van-empty description="地址列表为空" />
+      </div>
     </BgBox>
   </div>
 </template>
@@ -22,6 +26,7 @@
 <script>
    import '@/assets/less/address.less'
   import BgBox from '../components/BgBox.vue'
+ import  {getAddress} from '@/api/api.js';
   export default {
 
     name:'Address',
@@ -61,25 +66,18 @@
         tokenString,
         appkey,
       };
-      this.getAxios(
-        {
-          method: "GET",
-          url: "/findAddress",
-          params
-        },
-
-        (result) => {
-          console.log("result==>", result);
+      getAddress(params).then((result) => {
+          
           let data=result.data.result
           // let adress=dta
           data.map(v=>{
             v.isDefault=Boolean(v.isDefault)
-            console.log(v.isDefault)
+            
             v.address=`${v.province}${v.city}${v.county}`
           })
           this.list=data
-        }
-       );
+        })
+     
        },
        add(){
        this.$router.push({name:'NewAddress'})

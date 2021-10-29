@@ -63,7 +63,7 @@
 
 import "../assets/less/account.less";
 import BgBox from "../components/BgBox.vue";
-import {getAccountInfo,updateNickname,updatePersonDes,updateUserBg} from '@/api/api.js';
+import {getAccountInfo,updateNickname,updatePersonDes,updateUserAvatar} from '@/api/api.js';
 export default {
   name: "Account",
   components: {
@@ -187,29 +187,20 @@ export default {
         return this.$router.push({ name: "Login" });
       }
 
-      this.$toast.loading({
-        message: "加载中...",
-        forbidClick: true,
-        duration: 0,
-      });
+   
 
-      this.axios({
-        method: "POST",
-        url: "/updateAvatar",
-        data: {
+     updateUserAvatar({
+      
           appkey: this.appkey,
           tokenString,
           imgType: fileType,
           serverBase64Img: base64
-        },
+      
       })
         .then((result) => {
-          this.$toast.clear();
+         
           
-          if (result.data.code == 700) {
-            //token检验无效,则跳到登录页面
-            this.$router.push({ name: "Login" });
-          } else if (result.data.code == 'H001') {
+          if (result.data.code == 'H001') {
             this.accountInfo.userImg = result.data.userImg;
           }
 
@@ -217,7 +208,7 @@ export default {
 
         })
         .catch((err) => {
-          this.$toast.clear();
+       
           
         });
     },
@@ -270,7 +261,7 @@ export default {
         duration: 0,
       });
           Promise.all(arrRequest).then(result=>{
-            console.log(result)
+            
                  if(result.length>0){
                    let {nickName,desc}=this.accountInfo
                    this.copyAcountInfo={nickName,desc}

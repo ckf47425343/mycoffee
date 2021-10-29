@@ -2,18 +2,10 @@
   <div class="login">
 
     <van-nav-bar
-      left-text="返回"
       right-text="先逛一逛"
       @click-right="goState"
-    >
-      <template #left>
-        <div class="nav-left">
-          <div class="logo">
-            <img class="auto-img" src="../assets/images/home_active.png" alt="">
-          </div>
-          <div class="logo-text">Luckin Coffee</div>
-        </div>
-      </template>
+      
+    > 
     </van-nav-bar>
 
     <div class="user-box">
@@ -108,7 +100,7 @@
   //导入外部样式表
   import '@/assets/less/login.less'
   //导入表单验证模块
-  import {validForm} from '../assets/js/validForm'
+  import {validForm} from '@/utils/index.js'
   //导读接口
   import {login,register} from '@/api/api.js';
   export default {
@@ -174,18 +166,18 @@
           },
         };
 
-        let isPass = validForm.valid(o);
+        let isPass = validForm(o)
 
         if (isPass) {
 
-          // console.log('this.appkey ==> ', this.appkey);
+          // 
 
           //复制用户注册信息
           let userInfo = Object.assign({}, this.userRegisterInfo);
           userInfo.appkey = this.appkey;
 
           register(userInfo).then(result=>{
-            console.log(result)
+            
              if (result.data.code == 100) {
               this.$toast(result.data.msg)
               this.isShow = false;
@@ -214,7 +206,7 @@
           }
         };
 
-        let isPass = validForm.valid(o);
+        let isPass = validForm(o)
         if (isPass) {
           //发起登录请求
           //复制用户注册信息
@@ -230,7 +222,7 @@
          login(userInfo).then(result => {
             this.$toast.clear();
 
-            console.log('result ==> ', result);
+            
 
             if (result.data.code == 200) {
               //登录成功
@@ -247,7 +239,7 @@
           }).catch(err => {
             this.$toast.clear();
 
-            console.log('err ==> ', err);
+            
           })        
 
 

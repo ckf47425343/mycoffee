@@ -11,7 +11,7 @@
      
     </div>
 
-    <van-tabbar v-model="activeName" inactive-color="#646566" active-color="#0C34BA" route>
+    <van-tabbar v-model="activeName" inactive-color="#646566" active-color="#5f4121" route>
       <van-tabbar-item :icon="item.icon" v-for="(item, index) in tabbarData" :key="index" :name="item.name" replace :to="item.path">
         <span>{{item.title}}</span>
 
@@ -45,24 +45,24 @@
 
             path: '/main/home',
 
-            inactiveImg: require('../assets/images/home.png'),
-            activeImg: require('../assets/images/home_active.png')
+            inactiveImg: require('../assets/images/home-inactive.png'),
+            activeImg: require('../assets/images/home-active.png')
           },
           {
             title: '购物袋',
             icon: 'friends-o',
             name: 'Shopbag',
             path: '/main/shopbag',
-            inactiveImg: require('../assets/images/shopbag.png'),
-            activeImg: require('../assets/images/shopbag_active.png')
+            inactiveImg: require('../assets/images/shopbag-inactive.png'),
+            activeImg: require('../assets/images/shopbag-active.png')
           },
           {
             title: '我的',
             icon: 'setting-o',
             name: 'My',
             path: '/main/my',
-            inactiveImg: require('../assets/images/my.png'),
-            activeImg: require('../assets/images/my_active.png')
+            inactiveImg: require('../assets/images/my-inactive.png'),
+            activeImg: require('../assets/images/my-active.png')
           }
         ]
       };

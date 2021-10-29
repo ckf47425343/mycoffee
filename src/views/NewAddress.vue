@@ -24,6 +24,7 @@
 <script>
 import areaList from "../assets/js/area";
 import '@/assets/less/addAddress.less';
+import {getAddressByid,editAddress,addAddress,delAddress} from '@/api/api.js'
 
 export default {
   name: "NewAddress",
@@ -43,9 +44,9 @@ export default {
       beforeRouteEnter (to, from, next) {
         
         next((vm)=>{
-          console.log(from)
+          
           vm.fromPath=from.fullPath
-          console.log(vm.fromPath)
+          
         })
     },
 
@@ -55,7 +56,7 @@ export default {
     
 
     if (this.aid) {
-      console.log("this.aid==>", this.aid);
+      
       this.getAdressAidInfo();
     }
   },
@@ -83,31 +84,23 @@ export default {
       addAdressInfo.appkey = appkey;
       addAdressInfo.isDefault = Number(addAdressInfo.isDefault);
       let option
+      let pr
       if (this.aid) {
         addAdressInfo.aid = this.aid;
-          option = {
-          method: "POST",
-          url: "/editAddress",
-          data: addAdressInfo,
-        };
+        pr = editAddress(addAdressInfo)
       } else {
-          option = {
-          method: "POST",
-          url: "/addAddress",
-          data: addAdressInfo,
-        };
+        pr=addAddress(addAdressInfo)
       }
-      this.getAxios(option, (result) => {
-        console.log("result==>", result);
+      pr.then((result) => {
+        
 
-        if (result.data.code == 700) {
-          this.$router.push({ name: "Login" });
-        } else if (result.data.code == 9000 || result.data.code == 30000) {
+         if (result.data.code == 9000 || result.data.code == 30000) {
           this.$router.replace(this.fromPath);
         }
 
-        this.$toast(result.data.msg);
-      });
+       
+      })
+     
     },
 
     deleteAdress(content) {
@@ -124,20 +117,13 @@ export default {
         appkey,
         aid,
       };
-      this.getAxios(
-        {
-          method: "POST",
-          url: "/deleteAddress",
-          data: removeAdressInfo,
-        },
-        (result) => {
+      delAddress( removeAdressInfo).then((result) => {
         
           if(result.data.code==10000){
             this.$toast(result.data.msg)
             return this.$router.push({name:'Address'})
           }
-        }
-      );
+        })
     },
     getAdressAidInfo() {
       let tokenString = localStorage.getItem("__tk");
@@ -152,19 +138,8 @@ export default {
         appkey,
         aid,
       };
-      this.getAxios(
-        {
-          method: "GET",
-          url: "/findAddressByAid",
-          params,
-        },
-        (result) => {
-          console.log("result==>", result);
-         
-          if (result.data.code == 700) {
-            this.$toast(result.data.msg);
-            return this.$router.push({ name: "Login" });
-          }
+       getAddressByid(params).then((result) => {
+    
           if (result.data.code == 40000) {
             
             let data = result.data.result[0];
@@ -175,8 +150,8 @@ export default {
             data.isDefault = Boolean(data.isDefault);
             this.addAdressInfo = data;
           }
-        }
-      );
+        })
+     
       },
   },
 };

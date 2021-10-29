@@ -189,7 +189,7 @@ export default {
      getShopCart({appkey,tokenString})
         .then((result) => {
           this.$toast.clear();
-          console.log("shopbag result ==> ", result);
+          
           if(result.data.code == 5000) {
             result.data.result.map((v) => {
               v.isChecked = false;
@@ -211,15 +211,15 @@ export default {
         })
         .catch((err) => {
           this.$toast.clear();
-          console.log("err ==> ", err);
+          
         });
     },
 
     //懒加载购物袋数据
     loadData() {
-      console.log("触发懒加载");
+      
 
-      console.log("this.allShopbagData ==> ", this.allShopbagData);
+      
 
       setTimeout(() => {
         //在allShopbagData截取数据
@@ -228,13 +228,13 @@ export default {
           this.startIndex + this.dataCount
         );
 
-        // console.log('data ==> ', data);
+        // 
 
         this.startIndex += this.dataCount;
 
         this.shopbagData.push(...data);
 
-        // console.log('this.shopbagData ==> ', this.shopbagData);
+        // 
 
         this.isAllChecked = false;
 
@@ -251,7 +251,7 @@ export default {
 
     //全选
     allSelect() {
-      console.log("触发");
+      
       this.shopbagData.map((v) => {
         v.isChecked = this.isAllChecked;
       });
@@ -282,7 +282,7 @@ export default {
     
       //获取token
       let tokenString = localStorage.getItem("__tk");
-      // console.log('tokenString ==> ', tokenString);
+      // 
       if (!tokenString) {
         //跳回登录页面
         this.$toast("请先登录");
@@ -302,7 +302,7 @@ export default {
       })
         .then((result) => {
           this.$toast.clear();
-          console.log("count result ==> ", result);
+          
           if (result.data.code == 700) {
             //token检验无效,则跳到登录页面
             this.$router.push({ name: "Login" });
@@ -316,7 +316,7 @@ export default {
         })
         .catch((err) => {
           this.$toast.clear();
-          console.log("err ==> ", err);
+          
         });
     },
 
@@ -352,7 +352,7 @@ export default {
     
       //获取token
       let tokenString = localStorage.getItem("__tk");
-      // console.log('tokenString ==> ', tokenString);
+      // 
       if (!tokenString) {
         //跳回登录页面
         this.$toast("请先登录");
@@ -369,7 +369,7 @@ export default {
           sids: JSON.stringify(sids)})
         .then((result) => {
           this.$toast.clear();
-          console.log("count result ==> ", result);
+          
           if (result.data.code == 700) {
             //token检验无效,则跳到登录页面
             this.$router.push({ name: "Login" });
@@ -391,7 +391,7 @@ export default {
         })
         .catch((err) => {
           this.$toast.clear();
-          console.log("err ==> ", err);
+          
         });
 
     },
@@ -404,7 +404,7 @@ export default {
 
       //获取token
       let tokenString = localStorage.getItem("__tk");
-      // console.log('tokenString ==> ', tokenString);
+      // 
       if (!tokenString) {
         //跳回登录页面
         this.$toast("请先登录");
@@ -424,7 +424,7 @@ export default {
         })
         .then((result) => {
           this.$toast.clear();
-          console.log("count result ==> ", result);
+          
           if (result.data.code == 700) {
             //token检验无效,则跳到登录页面
             this.$router.push({ name: "Login" });
@@ -438,7 +438,7 @@ export default {
         })
         .catch((err) => {
           this.$toast.clear();
-          console.log("err ==> ", err);
+          
         });
 
       

@@ -56,6 +56,8 @@
 import "../assets/less/pay.less";
 import OrderList from "../components/OrderList";
 import OrderItem from "../components/OrderItem";
+import {payProduct,getShopProduct,getAddress} from '@/api/api.js';
+
 export default {
   name: "Pay",
   components: {
@@ -64,7 +66,7 @@ export default {
   },
   created() {
     this.sids = this.$route.query.sids.split("-");
-    console.log(this.sids)
+    
     this.getAddressList();
     this.getProductData();
   },
@@ -112,21 +114,11 @@ export default {
         tokenString,
         appkey,
       };
-      this.getAxios(
-        {
-          method: "GET",
-          url: "/findAddress",
-          params,
-        },
-
-        (result) => {
+    
+    getAddress(params).then( (result) => {
         
-          if (result.data.code == 700) {
-            //token检验无效,则跳到登录页面
-           this.$toast(result.data.msg)
-           return this.$router.push({ name: "Login" });
-          } 
-          else if(result.data.code==20000){
+         
+         if(result.data.code==20000){
             let data = result.data.result;
         
           data.map((v) => {
@@ -140,8 +132,8 @@ export default {
           this.list = data;
           }
         
-        }
-      );
+        })
+   
     },
     changeAddress(item) {
       this.chosenAddressId = item.id;
@@ -182,25 +174,19 @@ export default {
         address,
         receiver
       };
-      this.getAxios(
-        {
-          method: "POST",
-          url: "/pay",
-          data,
-        },
-        (result) => {
-        console.log(result)
+      payProduct(data).then(  (result) => {
+        
         if(result.data.code==700){
           this.$toast(result.data.msg)
           return this.$router.push('Login')
         }else if(result.data.code==60000){
-           console.log(this.$router.replace('/order'))
+           
         }
         
          this.$toast(result.data.msg)
           
-        }
-      );
+        })
+   
       })
      }
 
@@ -219,27 +205,17 @@ export default {
         appkey,
         sids
       };
-      this.getAxios(
-        {
-          method: "GET",
-          url: "/commitShopcart",
-          params,
-        },
-        (result) => {
-         console.log("commitShopcart==>",result)
-          if (result.data.code == 700) {
-            //token检验无效,则跳到登录页面
-           this.$toast(result.data.msg)
-           return this.$router.push({ name: "Login" });
-          } 
-          else if(result.data.code==50000){
+      getShopProduct(params).then( (result) => {
+         
+        
+           if(result.data.code==50000){
            if(result.data.result.length){
               this.isPay=true
            }
            else{
               this.isPay=false
            }
-          console.log(this.isPay)
+          
             let productInfo=result.data.result
             let otherInfo=this.otherInfo
             let allPrice=0
@@ -252,12 +228,12 @@ export default {
            otherInfo.allCount=allCount+""
            otherInfo.isCommit=false
           this.productInfo=productInfo
-          console.log("otherInfo==>",this.otherInfo)
+          
          }
          
           
-        }
-      );
+        })
+      
     },
   },
 };

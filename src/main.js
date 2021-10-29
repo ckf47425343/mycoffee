@@ -101,7 +101,7 @@ Vue.prototype.getAxios=function(option,callback){
   ).catch(err=>{
   //关闭加载提示
    this.$toast.clear();
-      console.log(err)
+      
   })
 }
 //配置请求基础路径
@@ -122,7 +122,7 @@ axios.interceptors.request.use(config => {
     //重新赋值config.data
     config.data = paramsString.slice(0, -1);
 
-    // console.log('config.data ==> ', config.data);
+    // 
 
   }
 

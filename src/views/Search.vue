@@ -28,6 +28,7 @@ import '@/assets/less/search.less';
 import BgBox from "../components/BgBox.vue";
 import {debounce}    from   '@/utils/index.js';
 import ProductItem from "../components/ProductItem.vue";
+import {SearchProduct} from '@/api/api.js';
 export default {
   name: "Search",
 
@@ -52,7 +53,11 @@ export default {
 
   created() {
 
-    console.log(this.$route.query)
+    
+
+    //创建节流函数
+
+   this.debounce=debounce(this.debounceSearch,500,false)
 
   },
 
@@ -61,63 +66,31 @@ export default {
       this.$router.go(-1);
     },
 
+  
+    debounceSearch(){
+       SearchProduct(
+        {appkey: this.appkey,
+          name: this.value,}
+   ).then((result) => {
+          if (result.data.code == "Q001") {
+            this.products = result.data.result;
+          } 
+        })
+        .catch((err) => {
+            
+        });
+    },
+
     //搜索
    searchProudct() {
   
- 
-
-  if(typeof this.myDebounce === 'function'){
-    console.log('test')
-    this.myDebounce()
-  }else{
-   this.myDebounce=debounce(()=>{
-
-  //   if(!this.value.replace(/\s/g,'')){
-  //      return this.$toast({
-  //        message:'不能为空'
-  //      })
-  // }
-
-        this.$toast.loading({
-        message: "加载中...",
-        forbidClick: true,
-        duration: 0,
-      });
-
-      this.axios({
-        method: "GET",
-        url: "/search",
-        params: {
-          appkey: this.appkey,
-          name: this.value,
-        },
-      })
-        .then((result) => {
-          this.$toast.clear();
-          
-
-          if (result.data.code == "Q001") {
-            this.products = result.data.result;
-          } else {
-            this.$toast(result.data.msg);
-          }
-        })
-        .catch((err) => {
-          this.$toast.clear();
-          
-        });
-      },1000,false)
-    this.myDebounce()
-  }
+    this.debounce()
+   
+  
+  
+  },
 
       
-
-
-
- 
-
-      
-    },
 
      //查看商品详情
     goDetail(pid) {

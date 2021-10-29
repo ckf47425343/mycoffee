@@ -116,7 +116,7 @@ export default {
   },
   methods: {
     imagePreview(){
-           console.log(this.imageView)
+           
             ImagePreview({
              images:this.imageView,
              startPosition: 0,
@@ -127,12 +127,12 @@ export default {
       let pid = this.$route.params.pid;
      
          getProductDetail({appkey,pid}).then(result => {
-          console.log("productDetail==>", result);
+          
           if (result.data.code == 600) {
             this.$toast(result.data.msg);
             let data = result.data.result[0];
             this.imageView.push(data.large_img)
-            console.log(data);
+            
             let productDetail = {};
 
             let r = ["sugar", "tem", "milk", "cream"];
@@ -167,8 +167,8 @@ export default {
             });
             productDetail.rules = rules;
             this.productDetail = productDetail;
-            console.log("rules==>", rules);
-            console.log("ProductDetail==>", productDetail);
+            
+            
           }
         }
       );
@@ -180,8 +180,8 @@ export default {
       this.$router.go(-1);
     },
     addShopBag(isBuy) {
-      console.log(this.value);
-      console.log(this.productDetail);
+      
+      
       let tokenString = localStorage.getItem("__tk");
       let appkey = this.appkey;
       let pid = this.$route.params.pid;
@@ -201,12 +201,12 @@ export default {
       };
       
       addShopCart(data).then((result) => {
-          console.log("result==>", result);
+          
           if (result.data.code == 700) {
             this.$toast(result.data.msg);
             return this.$router.push({ name: "Login" });
           } else if (result.data.code == 3000) {
-            console.log("==>", isBuy);
+            
             if (isBuy) {
               this.$router.push({
                 name: "Pay",
@@ -231,7 +231,7 @@ export default {
       let appkey = this.appkey;
 
     getShopCart({tokenString,appkey}).then((result) => {
-      console.log('result==>',result)
+      
           if (result.data.code == 700) {
             this.$toast(result.data.msg);
           
@@ -245,7 +245,7 @@ export default {
       
     },
   likeProduct() {
-    console.log('like',likeProduct)
+    
       let tokenString = localStorage.getItem("__tk");
       let appkey = this.appkey;
       let pid = this.$route.params.pid;
@@ -260,7 +260,7 @@ export default {
       pm=likeProduct({tokenString,appkey,pid})
      }
      pm.then(result=>{
-       console.log('result==>',result)
+       
           if (result.data.code == 700) {
             return this.$router.push({ name: "Login" });
           } else if (result.data.code == 800) {
@@ -278,25 +278,17 @@ export default {
       if (!tokenString) {
         return;
       }
-      this.getAxios(
-        {
-          method: "GET",
-          url: "/findlike",
-          params: {
-            tokenString,
+      getLikeProduct({tokenString,
             appkey,
-            pid,
-          },
-        },
-        (result) => {
-          console.log("result==>", result);
+            pid}).then((result) => {
+          
           if (result.data.result.length > 0) {
             this.isLike = true;
           } else {
             this.isLike = false;
           }
-        }
-      );
+        })
+   
     },
     goShopBag() {
       this.$router.push({ name: "Shopbag" });

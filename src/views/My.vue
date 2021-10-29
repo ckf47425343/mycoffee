@@ -25,6 +25,7 @@
 
 <script>
   import '../assets/less/my.less'
+  import {getUserInfo,updateUserBg} from '@/api/api.js';
   export default {
     name: 'My',
     data() {
@@ -60,7 +61,7 @@
     created() {
       //获取用户信息
       this.getUserInfo();
-      console.log('my')
+      
     },
 
     methods: {
@@ -75,40 +76,26 @@
         return this.$router.push({ name: "Login" });
       }
 
-      this.$toast.loading({
-        message: "加载中...",
-        forbidClick: true,
-        duration: 0,
-      });
-
-      this.axios({
-        method: "GET",
-        url: "/findMy",
-        params: {
-          appkey: this.appkey,
+   getUserInfo(
+       { appkey: this.appkey,
           tokenString
-        },
-      })
+        })
         .then((result) => {
-          this.$toast.clear();
-          
-          if (result.data.code == 700) {
-            //token检验无效,则跳到登录页面
-          //  return this.$router.push({ name: "Login" });
-          } else if (result.data.code == 'A001') {
+      
+        if (result.data.code == 'A001') {
             this.userInfo = result.data.result[0];
           }
 
         })
         .catch((err) => {
-          this.$toast.clear();
+    
           
         });
       },
 
       //上传背景
       uploadBg(file) {
-        console.log("file==>",file)
+        
         //允许文件类型
         let type = ['gif', 'png', 'jpg', 'jpeg'];
 
@@ -148,17 +135,11 @@
         forbidClick: true,
         duration: 0,
       });
-
-      this.axios({
-        method: "POST",
-        url: "/updateUserBg",
-        data: {
+    updateUserBg({
           appkey: this.appkey,
           tokenString,
           imgType: fileType,
-          serverBase64Img: base64
-        },
-      })
+          serverBase64Img: base64})
         .then((result) => {
           this.$toast.clear();
           
@@ -167,7 +148,7 @@
             this.$router.push({ name: "Login" });
           } else if (result.data.code == 'I001') {
             this.userInfo.userBg = result.data.userBg;
-            console.log("result.data.userBg==>", result.data.userBg)
+            
           }
 
           this.$toast(result.data.msg);

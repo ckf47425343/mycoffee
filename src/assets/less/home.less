@@ -4,9 +4,11 @@
     position: fixed;
     left: 0px;
     top: 0px;
-    height: @headerHeight;
+    height: calc(@headerHeight - 5px);
     width: 100%;
     z-index: 1;
+    padding-bottom: 5px;
+    background-color: #fff;
 
     .banner {
       height: 100%;
@@ -54,13 +56,17 @@
     width: calc(100% - 10px - @asideWidth);
     background-color: #fff;
     position: relative;
-    height: calc(@listHeight - 10px);
+    height: calc(@boxHeight - 10px);
     overflow: scroll;
     transform: translate(@asideWidth, @headerHeight);
-    padding: 5px;
+    padding: 0px 5px;
+
     .list {
+      &:first-child li:first-child {
+        margin-top: 0px;
+      }
       &:last-child {
-        margin-bottom: 180px;
+        margin-bottom: calc(@boxHeight / 2);
       }
       .list-item {
         display: flex;
@@ -104,5 +110,8 @@
         }
       }
     }
+    // .last-list {
+    //   height: @boxHeight !important;
+    // }
   }
 }

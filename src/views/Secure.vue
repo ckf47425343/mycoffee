@@ -73,7 +73,9 @@ import '@/assets/less/secure.less';
 import BgBox from "../components/BgBox.vue";
 
 //导入表单验证模块
-import { validForm } from "../assets/js/validForm";
+import { validForm } from "@/utils/index.js";
+
+import {destroyAccount,updatePassword} from '@/api/api.js'
 
 export default {
   name: "Secure",
@@ -103,6 +105,9 @@ export default {
 
     //注销账号
     destroyAccount() {
+   
+    
+    
       this.$dialog
         .confirm({
           title: "注销账号",
@@ -111,8 +116,9 @@ export default {
         })
         .then(() => {
           //执行账号注销
-          
-
+           
+        //
+ 
           //发起修改密码请求
           let tokenString = localStorage.getItem("__tk");
 
@@ -122,20 +128,7 @@ export default {
             return this.$router.push({ name: "Login" });
           }
 
-          this.$toast.loading({
-            message: "加载中...",
-            forbidClick: true,
-            duration: 0,
-          });
-
-          this.axios({
-            method: "POST",
-            url: "/destroyAccount",
-            data: {
-              appkey: this.appkey,
-              tokenString,
-            },
-          })
+         destroyAccount({appkey:this.appkey,tokenString})
             .then((result) => {
               this.$toast.clear();
               
@@ -150,10 +143,10 @@ export default {
                 }, 800);
               }
 
-              this.$toast(result.data.msg);
+              
             })
             .catch((err) => {
-              this.$toast.clear();
+             
               
             });
         })
@@ -192,6 +185,7 @@ export default {
 
     //提交修改密码
     commit() {
+      
       //构造表单验证信息
       let o = {
         oldPassword: {
@@ -206,7 +200,9 @@ export default {
         },
       };
 
-      let isPass = validForm.valid(o);
+      let isPass = validForm(o);
+
+      
 
       //如果表单验证通过
       if (isPass) {
@@ -224,29 +220,17 @@ export default {
           return this.$router.push({ name: "Login" });
         }
 
-        this.$toast.loading({
-          message: "加载中...",
-          forbidClick: true,
-          duration: 0,
-        });
-
-        this.axios({
-          method: "POST",
-          url: "/updatePassword",
-          data: {
-            appkey: this.appkey,
+        updatePassword(
+           {
+             appkey: this.appkey,
             tokenString,
             password: this.password.newPassword,
-            oldPassword: this.password.oldPassword,
-          },
-        })
+            oldPassword: this.password.oldPassword
+          })
           .then((result) => {
             this.$toast.clear();
             
-            if (result.data.code == 700) {
-              //token检验无效,则跳到登录页面
-              this.$router.push({ name: "Login" });
-            } else if (result.data.code == "E001") {
+             if (result.data.code == "E001") {
               setTimeout(() => {
                 //清除登录状态
                 localStorage.removeItem("__tk");
@@ -257,7 +241,7 @@ export default {
             this.$toast(result.data.msg);
           })
           .catch((err) => {
-            this.$toast.clear();
+        
             
           });
       }

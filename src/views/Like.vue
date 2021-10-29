@@ -24,6 +24,7 @@
 import "../assets/less/like.less";
 import BgBox from "../components/BgBox.vue";
 import ProductItem from '../components/ProductItem.vue';
+import {getAllLikeProduct,notLikeProduct} from '@/api/api.js';
 export default {
   name: "Like",
   components: {
@@ -55,15 +56,7 @@ export default {
         this.$toast("请先登录");
         return this.$router.push({ name: "Login" });
       }
-
-    this.getAxios({
-        method: "GET",
-        url: "/findAllLike",
-        params: {
-          appkey: this.appkey,
-          tokenString,
-        },
-        },(result) => {
+  getAllLikeProduct({appkey:this.appkey,tokenString}).then((result) => {
           this.$toast.clear();
           
           if (result.data.code == 700) {
@@ -73,6 +66,7 @@ export default {
             this.likeProduct = result.data.result;
           }
         })
+   
     },
 
     //查看商品详情
@@ -91,16 +85,7 @@ export default {
           this.$toast('请先登录');
           return this.$router.push({name: 'Login'});
         }
-
-        this.getAxios({
-         method: 'POST',
-          url: '/notlike',
-          data: {
-            appkey: this.appkey,
-            pid,
-            tokenString
-          }
-        },result => {
+   notLikeProduct({appkey: this.appkey, pid,tokenString}).then(result => {
           this.$toast.clear();
           
           if (result.data.code == 700) {
@@ -115,8 +100,7 @@ export default {
 
          
         })
-
-        
+    
     }
   },
 };

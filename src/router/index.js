@@ -11,11 +11,6 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/forgot',
-    name: 'Forgot',
-    component: () => import('../views/Forgot.vue')
-  },
-  {
     path: '/main',
     name: 'Main',
     component: () => import('../views/Main.vue'),
@@ -27,14 +22,6 @@ const routes = [
         path: 'home',
         name: 'Home',
         component: () => import('../views/Home.vue'),
-        meta:{
-          keepAlive:true
-        },
-      },
-      {
-        path: 'menu',
-        name: 'Menu',
-        component: () => import('../views/Menu.vue'),
         meta:{
           keepAlive:true
         },
