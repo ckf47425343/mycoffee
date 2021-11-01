@@ -176,14 +176,12 @@ export default {
       };
       payProduct(data).then(  (result) => {
         
-        if(result.data.code==700){
-          this.$toast(result.data.msg)
-          return this.$router.push('Login')
-        }else if(result.data.code==60000){
-           
+        if(result.data.code==60000){
+           this.$router.push({name:'Order'})
         }
+           this.$toast(result.data.msg)
         
-         this.$toast(result.data.msg)
+      
           
         })
    
